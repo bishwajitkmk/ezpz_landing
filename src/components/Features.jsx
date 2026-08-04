@@ -1,6 +1,7 @@
 import React from "react";
 import { BookOpen, Mic, Target, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const WORDS = ["Physics", "Chemistry", "Math"];
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -73,30 +74,27 @@ const FeatureCard = ({ icon: Icon, title, description }) => (
 );
 
 const Features = () => {
+  const { content } = useLanguage();
   const features = [
     {
       icon: BookOpen,
-      title: "Board Solutions",
-      description:
-        "Access 20+ years of HSC Physics Board questions from all boards, solved step-by-step with clear explanations.",
+      title: content.features.cards[0].title,
+      description: content.features.cards[0].description,
     },
     {
       icon: Zap,
-      title: "Interactive AI Tutor",
-      description:
-        "Ask JARVIS anything. Our AI tutor understands the context of every question and provides personalized help.",
+      title: content.features.cards[1].title,
+      description: content.features.cards[1].description,
     },
     {
       icon: Mic,
-      title: "Voice-First Learning",
-      description:
-        "Listen to JARVIS's explanations in high-quality English and Bengali voices. Study without looking at the screen.",
+      title: content.features.cards[2].title,
+      description: content.features.cards[2].description,
     },
     {
       icon: Target,
-      title: "MCQ Mastery",
-      description:
-        "Practice with timed MCQ sessions. Get instant feedback and analysis on your weak areas to improve your score.",
+      title: content.features.cards[3].title,
+      description: content.features.cards[3].description,
     },
   ];
 
@@ -105,11 +103,10 @@ const Features = () => {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-            Everything you need to ace <ScrambleWord />
+            {content.features.headingPrefix} <ScrambleWord />
           </h2>
           <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            Stop searching through messy test papers. E TESTPaper brings all
-            your study materials into one intelligent workspace.
+            {content.features.description}
           </p>
         </div>
 

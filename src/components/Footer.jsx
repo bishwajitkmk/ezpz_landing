@@ -1,7 +1,9 @@
 import React from "react";
 import logo from "../assets/smart_learning_icon_only.svg";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const Footer = () => {
+  const { content } = useLanguage();
   return (
     <footer className="bg-white border-t border-slate-100 pt-20 pb-10 px-4">
       <div className="max-w-7xl mx-auto">
@@ -20,8 +22,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              Empowering HSC students in Bangladesh with AI-driven physics
-              learning and expert solutions.
+              {content.footer.description}
             </p>
             <div className="flex gap-4">
               {/* Custom Twitter / X Icon */}
@@ -60,27 +61,27 @@ const Footer = () => {
 
           <div>
             <h4 className="font-bold text-slate-900 mb-6 uppercase text-[11px] tracking-widest">
-              Platform
+              {content.footer.platform}
             </h4>
             <ul className="space-y-4 text-sm text-slate-600">
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  Question Bank
+                  {content.footer.links.questionBank}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  AI Tutor JARVIS
+                  {content.footer.links.aiTutor}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  MCQ Practice
+                  {content.footer.links.mcqPractice}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  Board Solutions
+                  {content.footer.links.boardSolutions}
                 </a>
               </li>
             </ul>
@@ -88,27 +89,27 @@ const Footer = () => {
 
           <div>
             <h4 className="font-bold text-slate-900 mb-6 uppercase text-[11px] tracking-widest">
-              Resources
+              {content.footer.resources}
             </h4>
             <ul className="space-y-4 text-sm text-slate-600">
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  HSC Syllabus
+                  {content.footer.links.syllabus}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  Study Guides
+                  {content.footer.links.studyGuides}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  Blog
+                  {content.footer.links.blog}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-brand transition-colors">
-                  Help Center
+                  {content.footer.links.helpCenter}
                 </a>
               </li>
             </ul>
@@ -116,10 +117,10 @@ const Footer = () => {
 
           <div>
             <h4 className="font-bold text-slate-900 mb-6 uppercase text-[11px] tracking-widest">
-              Newsletter
+              {content.footer.newsletterHeading}
             </h4>
             <p className="text-slate-500 text-sm mb-4">
-              Stay updated with the latest study tips and platform features.
+              {content.footer.newsletterDescription}
             </p>
             <div className="flex gap-2">
               <input
@@ -128,20 +129,20 @@ const Footer = () => {
                 className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm flex-1 outline-none focus:border-brand transition-colors"
               />
               <button className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-800 transition-colors">
-                Join
+                {content.footer.join}
               </button>
             </div>
           </div>
         </div>
 
         <div className="border-t border-slate-50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-400 uppercase tracking-widest font-bold">
-          <p>© 2026 E TESTPaper. All rights reserved.</p>
+          <p>{content.footer.rights}</p>
           <div className="flex gap-8">
             <a href="#" className="hover:text-slate-600 transition-colors">
-              Privacy Policy
+              {content.footer.privacy}
             </a>
             <a href="#" className="hover:text-slate-600 transition-colors">
-              Terms of Service
+              {content.footer.terms}
             </a>
           </div>
         </div>

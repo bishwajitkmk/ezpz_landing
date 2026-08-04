@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Languages } from "lucide-react";
 import logo from "../assets/smart_learning_icon_only.svg";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { toggleLanguage, content } = useLanguage();
 
   const closeMenu = () => setMobileMenuOpen(false);
 
@@ -60,7 +62,7 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
               onClick={handleBrandClick}
               className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight truncate"
             >
-              E TESTPaper
+              {content.navbar.brand}
             </button>
           </div>
 
@@ -70,52 +72,62 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
               onClick={(event) => scrollToSection(event, "features")}
               className="text-sm font-medium text-slate-600 hover:text-brand hover:scale-125 transition-all duration-300"
             >
-              Features
+              {content.navbar.features}
             </a>
             <a
               href="#demo"
               onClick={(event) => scrollToSection(event, "demo")}
               className="text-sm font-medium text-slate-600 hover:text-brand hover:scale-125 transition-all duration-300"
             >
-              How it Works
+              {content.navbar.howItWorks}
             </a>
             <a
               href="#pricing"
               onClick={(event) => scrollToSection(event, "pricing")}
               className="text-sm font-medium text-slate-600 hover:text-brand hover:scale-125 transition-all duration-300"
             >
-              Pricing
+              {content.navbar.pricing}
             </a>
             <button
               type="button"
               onClick={handleBlogClick}
               className="text-sm font-medium text-slate-600 hover:text-brand hover:scale-125 transition-all duration-300"
             >
-              Blog
+              {content.navbar.blog}
             </button>
           </div>
 
           <div className="hidden md:flex items-center gap-4">
             <button className="relative overflow-hidden text-sm font-medium text-slate-600 px-4 py-2 rounded-full transition-all duration-300 hover:text-black before:absolute before:inset-0 before:rounded-full before:bg-brand/10 before:scale-0 before:transition-transform before:duration-200 hover:before:scale-105">
-              <span className="relative z-10">Log In</span>
+              <span className="relative z-10">{content.navbar.login}</span>
             </button>
             <button className="bg-brand text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-brand-hover transition-all shadow-sm">
-              Get Started
+              {content.navbar.getStarted}
             </button>
           </div>
 
-          <button
-            type="button"
-            className="md:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100"
-            onClick={() => setMobileMenuOpen((open) => !open)}
-            aria-label="Toggle navigation menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-5 h-5" />
-            ) : (
-              <Menu className="w-5 h-5" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="p-2 rounded-full text-slate-600 hover:bg-slate-100"
+              onClick={toggleLanguage}
+              aria-label="Switch language"
+            >
+              <Languages className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              className="md:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100"
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              aria-label={content.navbar.mobileMenuLabel}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
         </div>
 
         {mobileMenuOpen && (
@@ -125,35 +137,35 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
               onClick={(event) => scrollToSection(event, "features")}
               className="block px-1 py-2 text-sm font-medium text-slate-600"
             >
-              Features
+              {content.navbar.features}
             </a>
             <a
               href="#demo"
               onClick={(event) => scrollToSection(event, "demo")}
               className="block px-1 py-2 text-sm font-medium text-slate-600"
             >
-              How it Works
+              {content.navbar.howItWorks}
             </a>
             <a
               href="#pricing"
               onClick={(event) => scrollToSection(event, "pricing")}
               className="block px-1 py-2 text-sm font-medium text-slate-600"
             >
-              Pricing
+              {content.navbar.pricing}
             </a>
             <button
               type="button"
               onClick={handleBlogClick}
               className="block w-full text-left px-1 py-2 text-sm font-medium text-slate-600"
             >
-              Blog
+              {content.navbar.blog}
             </button>
             <div className="flex flex-col gap-2 pt-2">
               <button className="w-full rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600">
-                Sign In
+                {content.navbar.signIn}
               </button>
               <button className="w-full rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white">
-                Get Started
+                {content.navbar.getStarted}
               </button>
             </div>
           </div>

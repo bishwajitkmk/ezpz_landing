@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowLeft, BookOpen, Sparkles } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
 
 const posts = [
   {
@@ -23,6 +24,8 @@ const posts = [
 ];
 
 const BlogPage = ({ onBack }) => {
+  const { content } = useLanguage();
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -32,27 +35,26 @@ const BlogPage = ({ onBack }) => {
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:text-brand-hover transition-colors mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to home
+          {content.blog.back}
         </button>
 
         <div className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
           <div className="flex items-center gap-2 text-brand mb-4">
             <BookOpen className="w-5 h-5" />
             <span className="text-sm font-semibold uppercase tracking-[0.2em]">
-              Blog
+              {content.blog.badge}
             </span>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
-            Learn smarter with the E TESTPaper blog
+            {content.blog.heading}
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl">
-            Read practical study advice, product updates, and ideas for making
-            exam prep feel lighter and more effective.
+            {content.blog.description}
           </p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
-          {posts.map((post) => (
+          {content.blog.posts.map((post, index) => (
             <article
               key={post.title}
               className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"

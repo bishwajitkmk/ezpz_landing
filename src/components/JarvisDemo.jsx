@@ -1,495 +1,390 @@
-import React, { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  ChevronLeft,
-  ChevronRight,
   MessageCircle,
   Sparkles,
   Volume2,
   User,
+  BookOpen,
+  CheckCircle2,
 } from "lucide-react";
 
-const demoSlides = [
-  {
-    subject: "Physics",
+const demoSlides = {
+  Physics: {
     badge: "AI Physics Tutor",
-    prompt:
+    chapter: "Thermodynamics",
+    question:
       "Explain the Carnot Engine cycle and why it is considered the most efficient engine.",
+    intro:
+      "The Carnot cycle is a theoretical ideal cycle consisting of four reversible processes.",
     steps: [
-      "The Carnot cycle is a theoretical ideal cycle that consists of four reversible processes:",
-      "1. Isothermal Expansion (T₁)\n2. Adiabatic Expansion\n3. Isothermal Compression (T₂)\n4. Adiabatic Compression",
-      "Efficiency (η) is given by:",
-      "η = 1 - (T₂ / T₁)",
-      "It's the most efficient because it minimizes entropy generation. Would you like me to explain the T-S diagram for this?",
+      "Isothermal Expansion",
+      "Adiabatic Expansion",
+      "Isothermal Compression",
+      "Adiabatic Compression",
     ],
+    formula: "η = 1 − T₂ / T₁",
+    conclusion:
+      "It is considered the most efficient because it represents the maximum possible efficiency between two temperature reservoirs.",
   },
-  {
-    subject: "Chemistry",
+
+  Chemistry: {
     badge: "AI Chemistry Coach",
-    prompt:
-      "Help me understand why increasing temperature speeds up a chemical reaction.",
+    chapter: "Chemical Kinetics",
+    question:
+      "Why does increasing temperature make a chemical reaction happen faster?",
+    intro:
+      "When temperature increases, particles gain more kinetic energy and move faster.",
     steps: [
-      "Higher temperature gives particles more kinetic energy, so they collide more often and with more force.",
-      "1. More successful collisions\n2. Greater activation energy reach\n3. Faster reaction rate",
-      "The reaction rate can be visualized using the energy profile diagram:",
-      "Eₐ",
-      "That is why many reactions accelerate noticeably when the mixture is warmed.",
+      "More frequent collisions",
+      "Higher collision energy",
+      "More particles exceed Eₐ",
+      "Greater reaction rate",
     ],
+    formula: "k = A e⁻ᴱᵃ⸱ᴿᵀ",
+    conclusion:
+      "So, increasing temperature increases the fraction of successful collisions and usually causes the reaction rate to rise significantly.",
   },
-  {
-    subject: "Math",
+
+  Math: {
     badge: "AI Math Mentor",
-    prompt: "Show me how to solve this quadratic equation step by step.",
+    chapter: "Algebra",
+    question:
+      "Show me how to solve the quadratic equation x² + x − 6 = 0 step by step.",
+    intro:
+      "We can solve this quadratic equation by factoring it into two simpler expressions.",
     steps: [
-      "We can solve it by factoring or by using the quadratic formula.",
-      "1. Rearrange the equation\n2. Identify a, b, and c\n3. Substitute into the formula",
-      "x = (-b ± √(b² - 4ac)) / 2a",
-      "x = 2 or x = -3",
-      "Would you like me to explain why both values satisfy the original equation?",
+      "Identify a, b, and c",
+      "Find two suitable factors",
+      "Rewrite the quadratic",
+      "Solve for x",
     ],
+    formula: "x² + x − 6 = (x + 3)(x − 2)",
+    conclusion:
+      "Therefore, the two solutions are x = 2 and x = −3. Both values satisfy the original equation.",
   },
-];
-
-/* --------------------------------
-   SLIDE ANIMATION
---------------------------------- */
-
-const slideVariants = {
-  enter: (direction) => ({
-    x: direction > 0 ? 50 : -50,
-    opacity: 0,
-    scale: 0.98,
-    filter: "blur(4px)",
-  }),
-
-  center: {
-    x: 0,
-    opacity: 1,
-    scale: 1,
-    filter: "blur(0px)",
-  },
-
-  exit: (direction) => ({
-    x: direction > 0 ? -50 : 50,
-    opacity: 0,
-    scale: 0.98,
-    filter: "blur(4px)",
-  }),
 };
 
+const subjects = ["Physics", "Chemistry", "Math"];
+
+/* How long each subject stays on screen, and how often the progress bar ticks. */
+const SLIDE_DURATION = 10000;
+const TICK = 50;
+const PROGRESS_STEP = (TICK / SLIDE_DURATION) * 100;
+
 const JarvisDemo = () => {
-  const [activeDemo, setActiveDemo] = useState(0);
-  const [direction, setDirection] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
 
-  /* --------------------------------
-     NAVIGATION
-  --------------------------------- */
+  const activeSubject = subjects[activeIndex];
+  const currentDemo = demoSlides[activeSubject];
 
-  const goToDemo = (index, forcedDirection = null) => {
-    if (index === activeDemo) return;
+  /* Mirrors `progress` so the ticker can read it without restarting itself. */
+  const progressRef = useRef(0);
 
-    setDirection(forcedDirection ?? (index > activeDemo ? 1 : -1));
+  /* Fill the progress bar, then roll over to the next subject. Runs forever. */
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const next = progressRef.current + PROGRESS_STEP;
 
-    setActiveDemo(index);
+      if (next >= 100) {
+        progressRef.current = 0;
+        setProgress(0);
+        setActiveIndex((prev) => (prev + 1) % subjects.length);
+        return;
+      }
+
+      progressRef.current = next;
+      setProgress(next);
+    }, TICK);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const selectSubject = (index) => {
+    progressRef.current = 0;
+    setProgress(0);
+    setActiveIndex(index);
   };
-
-  const changeDemo = (step) => {
-    const nextIndex =
-      (activeDemo + step + demoSlides.length) % demoSlides.length;
-
-    goToDemo(nextIndex, step > 0 ? 1 : -1);
-  };
-
-  /* --------------------------------
-     SWIPE
-  --------------------------------- */
-
-  const handleDragEnd = (_, info) => {
-    if (info.offset.x < -60) {
-      changeDemo(1);
-    } else if (info.offset.x > 60) {
-      changeDemo(-1);
-    }
-  };
-
-  const currentDemo = demoSlides[activeDemo];
 
   return (
     <section id="demo" className="py-16 sm:py-24 px-4 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        {/* --------------------------------
-            MAIN LAYOUT
-        --------------------------------- */}
+        {/* =====================================================
+            SECTION HEADER
+        ====================================================== */}
 
-        <div className="flex flex-col xl:flex-row items-start xl:items-center gap-10 xl:gap-16">
-          {/* =================================
-              LEFT SIDE
-          ================================= */}
-
-          <div className="lg:w-1/2">
-            {/* Badge */}
-
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold mb-6">
-              <Sparkles className="w-4 h-4" />
-              <span>Meet JARVIS</span>
-            </div>
-
-            {/* Heading */}
-
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-              Study smarter with your personal AI tutor for Physics, Chemistry,
-              and Math
-            </h2>
-
-            {/* Description */}
-
-            <p className="text-base sm:text-lg text-slate-600 mb-8 leading-relaxed">
-              Whether you are learning formulas, lab concepts, or
-              problem-solving steps, JARVIS explains each idea clearly and
-              adapts to your pace.
-            </p>
-
-            {/* Features */}
-
-            <div className="space-y-6">
-              {[
-                {
-                  title: "Personalized Explanations",
-                  desc: "JARVIS adapts its tone and depth to your current understanding.",
-                },
-                {
-                  title: "Bilingual Support",
-                  desc: "Switch between English and Bengali mid-conversation.",
-                },
-                {
-                  title: "Visual Logic",
-                  desc: "Uses clear step-by-step reasoning for every subject.",
-                },
-              ].map((item, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-1">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                  </div>
-
-                  <div>
-                    <h4 className="font-bold text-slate-900">{item.title}</h4>
-
-                    <p className="text-slate-600 text-sm">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div className="text-center mb-10 sm:mb-14">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold mb-5">
+            <Sparkles className="w-4 h-4" />
+            <span>Meet JARVIS</span>
           </div>
 
-          {/* =================================
-              RIGHT SIDE — DEMO
-          ================================= */}
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+            One tutor. Every subject.
+          </h2>
 
-          <div className="lg:w-1/2 w-full">
-            <div className="bg-slate-50 rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xl relative">
-              {/* --------------------------------
-                  DEMO HEADER
-              --------------------------------- */}
+          <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
+            See how JARVIS explains concepts differently across Physics,
+            Chemistry, and Math.
+          </p>
+        </div>
 
-              <div className="flex items-center justify-between mb-4">
+        {/* =====================================================
+            SUBJECT SELECTOR + DEMO WINDOW
+
+            Stacked on mobile, side by side from lg upwards.
+        ====================================================== */}
+
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row lg:items-start gap-6 lg:gap-8">
+          {/* =====================================================
+              SUBJECT SELECTOR
+          ====================================================== */}
+
+          <div
+            role="tablist"
+            aria-label="Demo subject"
+            className="self-center lg:self-auto flex flex-wrap justify-center gap-3 rounded-full border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur lg:sticky lg:top-24 lg:w-48 lg:shrink-0 lg:flex-col lg:flex-nowrap lg:rounded-3xl lg:p-3"
+          >
+            {subjects.map((subject, index) => {
+              const isActive = index === activeIndex;
+
+              return (
+                <button
+                  key={subject}
+                  type="button"
+                  role="tab"
+                  id={`demo-tab-${subject}`}
+                  aria-selected={isActive}
+                  aria-controls="demo-panel"
+                  onClick={() => selectSubject(index)}
+                  className={`relative min-w-33 overflow-hidden rounded-full border-2 px-5 py-3 text-sm font-semibold transition-all duration-300 lg:w-full lg:rounded-2xl lg:text-left ${
+                    isActive
+                      ? "border-brand bg-brand text-white shadow-md"
+                      : "border-transparent bg-white text-slate-700 hover:border-brand/40 hover:text-brand"
+                  }`}
+                >
+                  <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-current" />
+                  {subject}
+
+                  {/* Countdown to the next subject */}
+
+                  {isActive && (
+                    <span
+                      className="absolute bottom-0 left-0 h-1 bg-white/70 transition-[width] duration-100 ease-linear"
+                      style={{ width: `${Math.min(progress, 100)}%` }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* =====================================================
+              DEMO WINDOW
+          ====================================================== */}
+
+          <div className="relative flex-1 min-w-0">
+            {/* Background Glow */}
+
+            <div className="absolute inset-0 bg-brand/10 blur-3xl rounded-full scale-75 -z-10" />
+
+            <div
+              id="demo-panel"
+              role="tabpanel"
+              aria-labelledby={`demo-tab-${activeSubject}`}
+              className="bg-slate-50 rounded-3xl p-4 sm:p-6 md:p-8 border border-slate-200 shadow-xl"
+            >
+              {/* =================================================
+                  DEMO TOP BAR
+              ================================================== */}
+
+              <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-brand">
-                    Swipe to explore
+                  <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-brand">
+                    JARVIS Demo
                   </p>
 
-                  <p className="text-sm text-slate-500">
-                    Physics • Chemistry • Math
+                  <p className="text-sm text-slate-500 mt-1">
+                    {activeSubject} · {currentDemo.chapter}
                   </p>
                 </div>
 
-                {/* Navigation Buttons */}
-
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => changeDemo(-1)}
-                    className="rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition hover:text-brand hover:border-brand/30"
-                    aria-label="Previous demo"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => changeDemo(1)}
-                    className="rounded-full border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition hover:text-brand hover:border-brand/30"
-                    aria-label="Next demo"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
+                <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-600 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  AI Tutor Online
                 </div>
               </div>
 
-              {/* --------------------------------
-                  ANIMATED DEMO
-              --------------------------------- */}
+              {/* =================================================
+                  ANIMATED CONTENT
+              ================================================== */}
 
-              <div className="relative">
-                <AnimatePresence
-                  initial={false}
-                  custom={direction}
-                  mode="popLayout"
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeSubject}
+                  initial={{
+                    opacity: 0,
+                    y: 10,
+                    scale: 0.995,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    y: -8,
+                    scale: 0.995,
+                  }}
+                  transition={{
+                    duration: 0.35,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                 >
-                  <motion.div
-                    key={currentDemo.subject}
-                    custom={direction}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                      x: {
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                      },
-                      opacity: {
-                        duration: 0.2,
-                      },
-                      scale: {
-                        duration: 0.25,
-                      },
-                      filter: {
-                        duration: 0.2,
-                      },
-                    }}
-                    drag="x"
-                    dragConstraints={{
-                      left: 0,
-                      right: 0,
-                    }}
-                    dragElastic={0.15}
-                    onDragEnd={handleDragEnd}
-                    className="space-y-6"
-                  >
-                    {/* =================================
-                        USER MESSAGE
-                    ================================= */}
+                  {/* =================================================
+                      USER QUESTION
+                  ================================================== */}
 
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: 12,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.35,
-                        delay: 0.08,
-                        ease: "easeOut",
-                      }}
-                      className="flex gap-4 justify-end"
-                    >
-                      <div className="bg-brand text-white p-4 rounded-2xl rounded-tr-none max-w-[80%] shadow-sm">
-                        <p className="text-sm md:text-base">
-                          {currentDemo.prompt}
-                        </p>
+                  <div className="flex gap-3 sm:gap-4 justify-end mb-6">
+                    <div className="bg-brand text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm">
+                      <p className="text-sm md:text-base leading-relaxed">
+                        {currentDemo.question}
+                      </p>
+                    </div>
+
+                    <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
+                      <User className="w-4 h-4 text-slate-500" />
+                    </div>
+                  </div>
+
+                  {/* =================================================
+                      JARVIS RESPONSE
+                  ================================================== */}
+
+                  <div className="flex gap-3 sm:gap-4">
+                    {/* JARVIS ICON */}
+
+                    <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center shrink-0">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+
+                    <div className="bg-white border border-slate-100 p-5 sm:p-6 rounded-2xl rounded-tl-none flex-1 shadow-sm">
+                      {/* RESPONSE HEADER */}
+
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="font-bold text-slate-900">JARVIS</span>
+
+                        <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded uppercase font-bold tracking-wider">
+                          {currentDemo.badge}
+                        </span>
                       </div>
 
-                      <div className="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center shrink-0">
-                        <User className="w-4 h-4 text-slate-500" />
+                      {/* =================================================
+                          INTRO
+                      ================================================== */}
+
+                      <p className="text-sm md:text-base text-slate-700 leading-relaxed mb-4">
+                        {currentDemo.intro}
+                      </p>
+
+                      {/* =================================================
+                          STEPS
+                      ================================================== */}
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+                        {currentDemo.steps.map((step, index) => (
+                          <div
+                            key={step}
+                            className="flex items-center gap-2 bg-slate-50 rounded-lg px-3 py-2.5"
+                          >
+                            <span className="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center text-[9px] font-bold shrink-0">
+                              {index + 1}
+                            </span>
+
+                            <span className="text-xs sm:text-sm text-slate-600 font-medium">
+                              {step}
+                            </span>
+                          </div>
+                        ))}
                       </div>
-                    </motion.div>
 
-                    {/* =================================
-                        JARVIS RESPONSE
-                    ================================= */}
-
-                    <motion.div
-                      initial={{
-                        opacity: 0,
-                        y: 18,
-                      }}
-                      animate={{
-                        opacity: 1,
-                        y: 0,
-                      }}
-                      transition={{
-                        duration: 0.4,
-                        delay: 0.18,
-                        ease: "easeOut",
-                      }}
-                      className="flex gap-4"
-                    >
-                      {/* JARVIS ICON */}
+                      {/* =================================================
+                          FORMULA
+                      ================================================== */}
 
                       <motion.div
                         initial={{
-                          scale: 0.8,
                           opacity: 0,
+                          scale: 0.97,
                         }}
                         animate={{
-                          scale: 1,
                           opacity: 1,
+                          scale: 1,
                         }}
                         transition={{
+                          delay: 0.1,
                           duration: 0.3,
-                          delay: 0.2,
-                          type: "spring",
-                          stiffness: 300,
-                          damping: 20,
                         }}
-                        className="w-8 h-8 rounded-full bg-brand flex items-center justify-center shrink-0"
+                        className="bg-brand/5 border border-brand/10 rounded-xl py-4 px-3 text-center mb-4"
                       >
-                        <Sparkles className="w-4 h-4 text-white" />
+                        <span className="font-serif italic text-xl sm:text-2xl text-brand">
+                          {currentDemo.formula}
+                        </span>
                       </motion.div>
 
-                      {/* JARVIS CARD */}
+                      {/* =================================================
+                          CONCLUSION
+                      ================================================== */}
 
-                      <div className="bg-white border border-slate-100 p-5 rounded-2xl rounded-tl-none max-w-[95%] sm:max-w-[90%] shadow-sm">
-                        {/* JARVIS HEADER */}
+                      <p className="text-sm md:text-base text-slate-700 leading-relaxed">
+                        {currentDemo.conclusion}
+                      </p>
 
-                        <motion.div
-                          initial={{
-                            opacity: 0,
-                            y: 5,
-                          }}
-                          animate={{
-                            opacity: 1,
-                            y: 0,
-                          }}
-                          transition={{
-                            delay: 0.28,
-                            duration: 0.25,
-                          }}
-                          className="flex items-center gap-2 mb-3"
+                      {/* =================================================
+                          RESPONSE ACTIONS
+                      ================================================== */}
+
+                      <div className="flex items-center gap-4 mt-5 pt-4 border-t border-slate-100">
+                        <button
+                          type="button"
+                          className="flex items-center gap-1.5 text-xs font-bold text-brand hover:text-brand-hover transition-colors"
                         >
-                          <span className="font-bold text-slate-900">
-                            JARVIS
-                          </span>
+                          <Volume2 className="w-4 h-4" />
+                          Listen
+                        </button>
 
-                          <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded uppercase font-bold tracking-wider">
-                            {currentDemo.badge}
-                          </span>
-                        </motion.div>
+                        <button
+                          type="button"
+                          className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          Ask Follow-up
+                        </button>
 
-                        {/* RESPONSE CONTENT */}
-
-                        <div className="space-y-3 text-slate-700 text-sm md:text-base">
-                          {currentDemo.steps.map((step, index) => (
-                            <motion.div
-                              key={`${currentDemo.subject}-${index}`}
-                              initial={{
-                                opacity: 0,
-                                y: 8,
-                              }}
-                              animate={{
-                                opacity: 1,
-                                y: 0,
-                              }}
-                              transition={{
-                                duration: 0.3,
-                                delay: 0.3 + index * 0.08,
-                                ease: "easeOut",
-                              }}
-                              className={
-                                index === 2 || index === 3
-                                  ? "bg-brand/5 p-4 rounded-xl text-center"
-                                  : index === 1
-                                    ? "bg-slate-50 p-3 rounded-lg border border-slate-100 font-mono text-[13px]"
-                                    : ""
-                              }
-                            >
-                              {index === 3 ? (
-                                <span className="text-brand font-serif italic text-xl">
-                                  {step}
-                                </span>
-                              ) : (
-                                <p className="whitespace-pre-line">{step}</p>
-                              )}
-                            </motion.div>
-                          ))}
-
-                          {/* --------------------------------
-                              ACTION BUTTONS
-                          --------------------------------- */}
-
-                          <motion.div
-                            initial={{
-                              opacity: 0,
-                            }}
-                            animate={{
-                              opacity: 1,
-                            }}
-                            transition={{
-                              delay: 0.75,
-                              duration: 0.3,
-                            }}
-                            className="flex items-center gap-3 pt-2"
-                          >
-                            <button className="flex items-center gap-2 text-xs font-bold text-brand hover:text-brand-hover transition-colors">
-                              <Volume2 className="w-4 h-4" />
-                              Listen (English)
-                            </button>
-
-                            <button className="flex items-center gap-2 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors">
-                              <MessageCircle className="w-4 h-4" />
-                              Ask Follow-up
-                            </button>
-                          </motion.div>
+                        <div className="ml-auto hidden sm:flex items-center gap-1.5 text-[10px] text-emerald-600">
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          Board verified
                         </div>
                       </div>
-                    </motion.div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* --------------------------------
-                  SLIDE INDICATORS
-              --------------------------------- */}
-
-              <div className="mt-6 flex items-center justify-center gap-2">
-                {demoSlides.map((demo, index) => (
-                  <button
-                    key={demo.subject}
-                    type="button"
-                    onClick={() => goToDemo(index)}
-                    className={`h-2.5 rounded-full transition-all duration-300 ${
-                      index === activeDemo
-                        ? "w-8 bg-brand"
-                        : "w-2.5 bg-slate-300 hover:bg-slate-400"
-                    }`}
-                    aria-label={`Show ${demo.subject} demo`}
-                  />
-                ))}
-              </div>
-
-              {/* --------------------------------
-                  STUDENT SOCIAL PROOF
-              --------------------------------- */}
-
-              <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-xl border border-slate-100 hidden md:block">
-                <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[1, 2, 3].map((i) => (
-                      <div
-                        key={i}
-                        className="w-8 h-8 rounded-full border-2 border-white bg-slate-100 overflow-hidden"
-                      >
-                        <img
-                          src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i + 10}`}
-                          alt="User"
-                        />
-                      </div>
-                    ))}
+                    </div>
                   </div>
+                </motion.div>
+              </AnimatePresence>
 
-                  <div className="text-xs">
-                    <p className="font-bold text-slate-900">
-                      Join 500+ students
-                    </p>
+              {/* =================================================
+                  DEMO FOOTER
+              ================================================== */}
 
-                    <p className="text-slate-500 text-[10px]">
-                      Studying with JARVIS today
-                    </p>
-                  </div>
+              <div className="mt-8 pt-5 border-t border-slate-200 flex items-center justify-center text-sm text-slate-500">
+                <div className="flex items-center gap-2 text-center">
+                  <BookOpen className="w-4 h-4 text-brand shrink-0" />
+
+                  <span>
+                    Cycling through Physics, Chemistry and Math — or pick a
+                    subject from the list.
+                  </span>
                 </div>
               </div>
             </div>

@@ -6,9 +6,11 @@ import JarvisDemo from "./components/JarvisDemo";
 import Pricing from "./components/Pricing";
 import Footer from "./components/Footer";
 import BlogPage from "./components/BlogPage";
+import { useLanguage } from "./i18n/LanguageContext";
 
 const App = () => {
   const [showBlog, setShowBlog] = useState(false);
+  const { content } = useLanguage();
 
   const handleNavigateHome = (sectionId = null) => {
     setShowBlog(false);
@@ -46,7 +48,7 @@ const App = () => {
           <main id="home">
             <Hero />
             <Features />
-            <JarvisDemo />
+            
             <Pricing />
 
             {/* Final CTA Section */}
@@ -57,14 +59,19 @@ const App = () => {
               </div>
               <div className="max-w-4xl mx-auto text-center relative z-10">
                 <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-                  Ready to master Physics?
+                  {content.language === "bn"
+                    ? "পদার্থবিদ্যায় মাস্টার হতে প্রস্তুত?"
+                    : "Ready to master Physics?"}
                 </h2>
                 <p className="text-brand-light/80 text-lg mb-10 max-w-xl mx-auto">
-                  Join thousands of students who are already using E TESTPaper
-                  to ace their board exams.
+                  {content.language === "bn"
+                    ? "ই-টেস্টপেপার ব্যবহার করে হাজারো শিক্ষার্থী ইতিমধ্যে তাদের বোর্ড পরীক্ষায় সাফল্য পেয়ে যাচ্ছে।"
+                    : "Join thousands of students who are already using E TESTPaper to ace their board exams."}
                 </p>
                 <button className="bg-white text-brand px-10 py-4 rounded-full font-bold text-lg hover:bg-brand-light transition-all shadow-xl">
-                  Create Your Free Account
+                  {content.language === "bn"
+                    ? "Free একাউন্ট তৈরি করুন"
+                    : "Create Your Free Account"}
                 </button>
               </div>
             </section>

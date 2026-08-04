@@ -1,223 +1,121 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Check,
-  X,
-  Sparkles,
-  Zap,
-  Award,
-  HelpCircle,
-  CheckCircle2,
-  ShieldCheck,
-  HelpCircle as HelpIcon,
-} from "lucide-react";
+import { CheckCircle2, XCircle, Crown, Zap, Lock } from "lucide-react";
+import { useLanguage } from "../i18n/LanguageContext";
+
+const PRO_PRICE = 999;
+const PRACTICE_ADDON_PRICE = 50;
+const PREMIUM_PRICE = 2499;
+
+const BENGALI_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+
+const formatPrice = (value, language) => {
+  const formatted = value.toLocaleString("en-US");
+
+  if (language !== "bn") return formatted;
+
+  return formatted.replace(/\d/g, (digit) => BENGALI_DIGITS[Number(digit)]);
+};
+
+/*
+  Feature rows per tier. `true` is included, `false` is not, and "addon" is the
+  Practice row on Pro — it only turns into a tick once the add-on is switched on.
+*/
+const tierFeatures = {
+  basic: [
+    ["solutions", true],
+    ["questionBank", true],
+    ["mcq", false],
+    ["cq", false],
+    ["practice", false],
+    ["teacherPanel", false],
+    ["imageDrop", false],
+    ["voice", false],
+  ],
+  pro: [
+    ["mcq", true],
+    ["cq", true],
+    ["solutions", true],
+    ["questionBank", true],
+    ["imageDrop", true],
+    ["practice", "addon"],
+    ["teacherPanel", false],
+    ["voice", false],
+  ],
+  premium: [
+    ["everythingPro", true],
+    ["teacherPanel", true],
+    ["practiceIncluded", true],
+    ["imageDrop", true],
+    ["voice", true],
+  ],
+};
+
+/* Tints for the four traction stats, in slide order. */
+const statTones = [
+  { card: "border-blue-100 bg-blue-50", value: "text-blue-600" },
+  { card: "border-violet-100 bg-violet-50", value: "text-brand" },
+  { card: "border-amber-100 bg-amber-50", value: "text-amber-600" },
+  { card: "border-slate-200 bg-white", value: "text-brand" },
+];
+
+const quoteAccents = ["border-l-blue-400", "border-l-amber-400"];
+
+/* Per-tier accent, so each card keeps one colour family. */
+const accents = {
+  basic: "text-blue-500",
+  pro: "text-brand",
+  premium: "text-amber-500",
+};
+
+const FeatureRow = ({ label, state, tier }) => {
+  if (state === "addon") {
+    return (
+      <li className="flex items-center gap-3 text-sm text-slate-700">
+        <span className="flex w-5 shrink-0 justify-center">
+          <span className="h-2.5 w-2.5 rounded-full bg-brand" />
+        </span>
+        <span>{label}</span>
+      </li>
+    );
+  }
+
+  return (
+    <li
+      className={`flex items-center gap-3 text-sm ${
+        state ? "text-slate-700" : "text-slate-400"
+      }`}
+    >
+      {state ? (
+        <CheckCircle2 className={`w-5 h-5 shrink-0 ${accents[tier]}`} />
+      ) : (
+        <XCircle className="w-5 h-5 shrink-0 text-slate-300" />
+      )}
+      <span>{label}</span>
+    </li>
+  );
+};
 
 const Pricing = () => {
-  const [billingPeriod, setBillingPeriod] = useState("monthly");
+  const [practiceAddon, setPracticeAddon] = useState(false);
+  const { content, language } = useLanguage();
 
-  const plans = [
-    {
-      name: "Basic",
-      icon: Sparkles,
-      iconColor: "text-slate-400",
-      iconBg: "bg-slate-50",
-      description: "Free access for students who want to explore the platform.",
-      price: {
-        monthly: 0,
-        annual: 0,
-      },
-      cta: "Start Free",
-      popular: false,
-      features: [
-        "Free plan access",
-        "No AI tutor usage included",
-        "No voice interaction",
-        "No practice mode",
-        "Great for exploring the experience",
-      ],
-    },
-    {
-      name: "Trial",
-      icon: Zap,
-      iconColor: "text-brand",
-      iconBg: "bg-brand/10",
-      description:
-        "A 3-day window with full premium access to test the product.",
-      price: {
-        monthly: 0,
-        annual: 0,
-      },
-      cta: "Try 3-Day Premium",
-      popular: true,
-      features: [
-        "Full premium AI access for 3 days",
-        "Includes free-chat tutoring",
-        "Voice enabled",
-        "Practice mode included",
-        "Ideal for evaluating the full experience",
-      ],
-    },
-    {
-      name: "Pro",
-      icon: Award,
-      iconColor: "text-amber-500",
-      iconBg: "bg-amber-50",
-      description:
-        "For students who need board-focused help with MCQ and CQ support.",
-      price: {
-        monthly: 999,
-        annual: 999,
-      },
-      cta: "Choose Pro",
-      popular: false,
-      features: [
-        "MCQ + CQ help",
-        "Image drop support",
-        "API spend cap of Tk 500/month",
-        "Board-focused tutoring support",
-        "Billed monthly in Tk",
-      ],
-    },
-    {
-      name: "Pro + Practice",
-      icon: HelpCircle,
-      iconColor: "text-emerald-600",
-      iconBg: "bg-emerald-50",
-      description: "Adds structured practice sessions to the Pro experience.",
-      price: {
-        monthly: 1049,
-        annual: 1049,
-      },
-      cta: "Add Practice",
-      popular: false,
-      features: [
-        "Everything in Pro",
-        "Practice mode included",
-        "Track performance by session",
-        "Better exam-prep flow",
-        "Billed monthly in Tk",
-      ],
-    },
-    {
-      name: "Premium",
-      icon: Sparkles,
-      iconColor: "text-brand",
-      iconBg: "bg-brand/10",
-      description:
-        "The complete package for full tutoring, voice, and practice access.",
-      price: {
-        monthly: 2499,
-        annual: 2499,
-      },
-      cta: "Go Premium",
-      popular: false,
-      features: [
-        "Everything in Pro + Practice",
-        "Free chat enabled",
-        "Voice enabled",
-        "Full premium access",
-        "API spend cap of Tk 1,600/month",
-      ],
-    },
-  ];
+  const tiers = content.pricing.tiers;
+  const featureNames = content.pricing.featureNames;
+  const perMonth = content.pricing.perMonthShort;
+  const validation = content.validation;
 
-  const comparisonCategories = [
-    {
-      category: "AI Tutor Access",
-      features: [
-        {
-          name: "Free-chat tutoring",
-          basic: "No",
-          trial: "Yes",
-          pro: "No",
-          proPractice: "No",
-          premium: "Yes",
-        },
-        {
-          name: "Voice interaction",
-          basic: "No",
-          trial: "Yes",
-          pro: "No",
-          proPractice: "No",
-          premium: "Yes",
-        },
-        {
-          name: "Image drop input",
-          basic: "No",
-          trial: "Yes",
-          pro: "Yes",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-        {
-          name: "MCQ + CQ help",
-          basic: "No",
-          trial: "Yes",
-          pro: "Yes",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-      ],
-    },
-    {
-      category: "Practice & Prep",
-      features: [
-        {
-          name: "Practice mode",
-          basic: "No",
-          trial: "Yes",
-          pro: "No",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-        {
-          name: "Board-based question support",
-          basic: "No",
-          trial: "Yes",
-          pro: "Yes",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-        {
-          name: "Session-based tracking",
-          basic: "No",
-          trial: "Yes",
-          pro: "No",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-      ],
-    },
-    {
-      category: "Billing & Limits",
-      features: [
-        {
-          name: "API spend cap",
-          basic: "None",
-          trial: "Included in trial",
-          pro: "Tk 500/month",
-          proPractice: "Tk 500/month",
-          premium: "Tk 1,600/month",
-        },
-        {
-          name: "Top-up credits",
-          basic: "No",
-          trial: "No",
-          pro: "Yes",
-          proPractice: "Yes",
-          premium: "Yes",
-        },
-        {
-          name: "Payment method",
-          basic: "Free",
-          trial: "Free",
-          pro: "bKash / manual approval",
-          proPractice: "bKash / manual approval",
-          premium: "bKash / manual approval",
-        },
-      ],
-    },
-  ];
+  const proPrice = practiceAddon ? PRO_PRICE + PRACTICE_ADDON_PRICE : PRO_PRICE;
+
+  const renderFeatures = (tier) =>
+    tierFeatures[tier].map(([key, state]) => (
+      <FeatureRow
+        key={key}
+        tier={tier}
+        label={featureNames[key]}
+        state={state === "addon" && practiceAddon ? true : state}
+      />
+    ));
 
   const faqs = [
     {
@@ -247,301 +145,162 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="py-16 sm:py-24 bg-surface px-4 overflow-hidden relative border-t border-slate-100"
+      className="py-16 sm:py-24 px-4 overflow-hidden relative border-t border-slate-100 bg-linear-to-br from-amber-50 via-white to-violet-100"
     >
       {/* Background Ornaments */}
       <div className="absolute top-1/4 left-1/2 w-200 h-200 bg-brand/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header Section */}
-        <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold mb-6">
-            <Sparkles className="w-4 h-4" />
-            <span>Simple, Transparent Pricing</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-6 tracking-tight">
-            Invest in your grades, invest in your future
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto mb-10">
-            Choose the perfect plan for your academic goals. Get access to top
-            solutions, standard mock test systems, and your personal AI tutor,
-            JARVIS.
-          </p>
+        {/* =====================================================
+            HEADER
+        ====================================================== */}
 
-          {/* Toggle for Billing Period */}
-          <div className="flex items-center justify-center gap-4">
-            <span
-              className={`text-sm font-bold transition-colors ${billingPeriod === "monthly" ? "text-slate-900" : "text-slate-400"}`}
-            >
-              Monthly Billing
-            </span>
-            <button
-              onClick={() =>
-                setBillingPeriod(
-                  billingPeriod === "monthly" ? "monthly" : "monthly",
-                )
-              }
-              className="relative w-16 h-8 bg-brand rounded-full p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2"
-              aria-label="Billing period"
-            >
-              <motion.div
-                className="w-6 h-6 bg-white rounded-full shadow-md"
-                animate={{ x: 0 }}
-                transition={{ type: "spring", stiffness: 500, damping: 30 }}
-              />
-            </button>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-slate-400">
-                Tk-based plans
-              </span>
-            </div>
-          </div>
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
+            {content.pricing.chooseHeading}
+          </h2>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-5 gap-6 md:gap-8 mb-16 sm:mb-24 items-stretch">
-          {plans.map((plan, idx) => {
-            const planIcon = plan.icon;
-            const priceVal = plan.price.monthly;
+        {/* =====================================================
+            PLAN CARDS
+        ====================================================== */}
 
-            return (
-              <div
-                key={idx}
-                className={`bg-white rounded-3xl border transition-all duration-300 relative flex flex-col justify-between ${
-                  plan.popular
-                    ? "border-brand shadow-xl scale-102 lg:scale-105 z-10 p-6 sm:p-8 md:p-10 ring-4 ring-brand/10"
-                    : "border-slate-100 shadow-md hover:shadow-lg p-6 sm:p-8"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mb-16 sm:mb-24">
+          {/* =================================================
+              BASIC
+          ================================================== */}
+
+          <div className="relative flex flex-col rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+              {tiers.basic.label}
+            </p>
+
+            <p className="mt-3 text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+              {tiers.basic.price}
+            </p>
+
+            <p className="mt-2 text-sm text-slate-500">{tiers.basic.note}</p>
+
+            <ul className="mt-7 space-y-3.5 flex-1">
+              {renderFeatures("basic")}
+            </ul>
+
+            <button
+              type="button"
+              className="mt-8 w-full rounded-full border border-slate-200 bg-white py-3.5 px-6 text-sm font-bold text-blue-600 transition-colors hover:border-blue-200 hover:bg-blue-50"
+            >
+              {tiers.basic.cta}
+            </button>
+          </div>
+
+          {/* =================================================
+              PRO
+          ================================================== */}
+
+          <div className="relative flex flex-col rounded-3xl border border-brand/20 bg-white p-6 sm:p-8 shadow-xl ring-1 ring-brand/5 md:-mt-2">
+            <span className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-1.5 text-xs font-bold text-white shadow-md">
+              <Crown className="w-3.5 h-3.5" />
+              {tiers.pro.badge}
+            </span>
+
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand">
+              {tiers.pro.label}
+            </p>
+
+            <div className="mt-3 flex items-baseline gap-1">
+              <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+                ৳{formatPrice(proPrice, language)}
+              </span>
+
+              <span className="text-sm font-medium text-slate-500">
+                {perMonth}
+              </span>
+            </div>
+
+            <ul className="mt-7 space-y-3.5 flex-1">{renderFeatures("pro")}</ul>
+
+            {/* PRACTICE ADD-ON SWITCH */}
+
+            <div className="mt-8 flex items-center gap-4 rounded-2xl border border-slate-200 px-4 py-3.5">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-bold text-slate-800">
+                  {tiers.pro.addonTitle}
+                </p>
+
+                <p className="mt-0.5 text-xs text-slate-500">
+                  +৳{formatPrice(PRACTICE_ADDON_PRICE, language)} → ৳
+                  {formatPrice(PRO_PRICE + PRACTICE_ADDON_PRICE, language)}
+                  {perMonth}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={practiceAddon}
+                aria-label={tiers.pro.addonAria}
+                onClick={() => setPracticeAddon((prev) => !prev)}
+                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${
+                  practiceAddon ? "bg-brand" : "bg-slate-200"
                 }`}
               >
-                {/* Popular Badge */}
-                {plan.popular && (
-                  <span className="absolute top-0 right-1/2 transform translate-x-1/2 -translate-y-1/2 bg-brand text-white text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-md">
-                    Most Popular
-                  </span>
-                )}
+                <motion.span
+                  className="absolute top-1 left-1 block h-5 w-5 rounded-full bg-white shadow"
+                  animate={{ x: practiceAddon ? 20 : 0 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 32 }}
+                />
+              </button>
+            </div>
 
-                <div>
-                  {/* Icon & Plan Name */}
-                  <div className="flex items-center gap-4 mb-6">
-                    <div
-                      className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${plan.iconBg}`}
-                    >
-                      <plan.icon className={`w-6 h-6 ${plan.iconColor}`} />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-extrabold text-slate-900">
-                        {plan.name}
-                      </h3>
-                      <p className="text-xs text-slate-500 font-medium">
-                        For students
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-slate-600 text-sm mb-6 leading-relaxed">
-                    {plan.description}
-                  </p>
-
-                  {/* Pricing Display */}
-                  <div className="flex items-baseline gap-1 mb-8">
-                    <span className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-                      {priceVal === 0 ? "Free" : `Tk ${priceVal}`}
-                    </span>
-                    {priceVal > 0 && (
-                      <span className="text-slate-500 font-semibold text-sm">
-                        / month
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Divider */}
-                  <div className="border-t border-slate-100 my-6" />
-
-                  {/* Feature Checklist */}
-                  <ul className="space-y-4 mb-8">
-                    {plan.features.map((feature, fIdx) => (
-                      <li
-                        key={fIdx}
-                        className="flex items-start gap-3 text-slate-700 text-sm"
-                      >
-                        <CheckCircle2
-                          className={`w-5 h-5 shrink-0 mt-0.5 ${plan.popular ? "text-brand" : "text-emerald-500"}`}
-                        />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Call to Action Button */}
-                <button
-                  className={`w-full py-4 px-6 rounded-2xl font-bold text-sm transition-all duration-300 shadow-md ${
-                    plan.popular
-                      ? "bg-brand hover:bg-brand-hover text-white hover:shadow-brand/20"
-                      : "bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200"
-                  }`}
-                >
-                  {plan.cta}
-                </button>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Professional Comparison Segment */}
-        <div className="mb-24">
-          <div className="text-center mb-12">
-            <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 tracking-tight">
-              Compare Features Side-by-Side
-            </h3>
-            <p className="text-slate-500 max-w-lg mx-auto text-sm md:text-base">
-              Take a closer look at the key highlights and limits of each tier
-              to find what best fits your needs.
-            </p>
+            <button
+              type="button"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-blue-600 to-brand py-3.5 px-6 text-sm font-bold text-white shadow-lg shadow-brand/20 transition-opacity hover:opacity-90"
+            >
+              <Zap className="w-4 h-4" />
+              {tiers.pro.cta}
+            </button>
           </div>
 
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-lg overflow-hidden">
-            {/* Desktop / Tablet Comparison Table */}
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px] text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50/50 border-b border-slate-100">
-                    <th className="p-6 text-sm font-bold text-slate-500 uppercase tracking-wider w-[22%]">
-                      Features & Limits
-                    </th>
-                    <th className="p-6 text-sm font-bold text-slate-700 uppercase tracking-wider text-center w-[16%]">
-                      Basic
-                    </th>
-                    <th className="p-6 text-sm font-bold text-brand uppercase tracking-wider text-center w-[16%] bg-brand/5 relative">
-                      <div className="absolute top-0 inset-x-0 h-1 bg-brand" />
-                      Trial
-                    </th>
-                    <th className="p-6 text-sm font-bold text-slate-700 uppercase tracking-wider text-center w-[16%]">
-                      Pro
-                    </th>
-                    <th className="p-6 text-sm font-bold text-emerald-600 uppercase tracking-wider text-center w-[16%]">
-                      Pro + Practice
-                    </th>
-                    <th className="p-6 text-sm font-bold text-amber-600 uppercase tracking-wider text-center w-[16%]">
-                      Premium
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparisonCategories.map((category, catIdx) => (
-                    <React.Fragment key={catIdx}>
-                      {/* Category Header Row */}
-                      <tr className="bg-slate-50/30">
-                        <td
-                          colSpan="4"
-                          className="px-6 py-4 text-xs font-black text-slate-900 uppercase tracking-widest border-y border-slate-100"
-                        >
-                          {category.category}
-                        </td>
-                      </tr>
-                      {/* Features */}
-                      {category.features.map((item, itemIdx) => (
-                        <tr
-                          key={itemIdx}
-                          className="border-b border-slate-50 hover:bg-slate-50/20 transition-colors"
-                        >
-                          <td className="p-6 text-slate-800 text-sm font-semibold">
-                            {item.name}
-                          </td>
-                          {/* Starter column */}
-                          <td className="p-6 text-center text-sm">
-                            {typeof item.basic === "boolean" ? (
-                              item.basic ? (
-                                <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-300 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-slate-500 font-medium">
-                                {item.basic}
-                              </span>
-                            )}
-                          </td>
-                          {/* Trial column */}
-                          <td className="p-6 text-center text-sm bg-brand/5 font-semibold">
-                            {typeof item.trial === "boolean" ? (
-                              item.trial ? (
-                                <Check className="w-5 h-5 text-brand mx-auto stroke-[2.5]" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-300 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-slate-900 font-bold">
-                                {item.trial}
-                              </span>
-                            )}
-                          </td>
-                          {/* Pro column */}
-                          <td className="p-6 text-center text-sm">
-                            {typeof item.pro === "boolean" ? (
-                              item.pro ? (
-                                <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-300 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-slate-700 font-medium">
-                                {item.pro}
-                              </span>
-                            )}
-                          </td>
-                          {/* Pro + Practice column */}
-                          <td className="p-6 text-center text-sm">
-                            {typeof item.proPractice === "boolean" ? (
-                              item.proPractice ? (
-                                <Check className="w-5 h-5 text-emerald-500 mx-auto" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-300 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-slate-700 font-medium">
-                                {item.proPractice}
-                              </span>
-                            )}
-                          </td>
-                          {/* Premium column */}
-                          <td className="p-6 text-center text-sm">
-                            {typeof item.premium === "boolean" ? (
-                              item.premium ? (
-                                <Check className="w-5 h-5 text-amber-500 mx-auto" />
-                              ) : (
-                                <X className="w-5 h-5 text-slate-300 mx-auto" />
-                              )
-                            ) : (
-                              <span className="text-slate-700 font-medium">
-                                {item.premium}
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </tbody>
-              </table>
+          {/* =================================================
+              PREMIUM
+          ================================================== */}
+
+          <div className="relative flex flex-col rounded-3xl border border-amber-200/70 bg-white p-6 sm:p-8 shadow-sm">
+            <span className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 rounded-full bg-amber-400 px-3.5 py-1.5 text-xs font-bold text-amber-950 shadow-md">
+              <Crown className="w-3.5 h-3.5" />
+              {tiers.premium.badge}
+            </span>
+
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-500">
+              {tiers.premium.label}
+            </p>
+
+            <div className="mt-3 flex items-baseline gap-1">
+              <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+                ৳{formatPrice(PREMIUM_PRICE, language)}
+              </span>
+
+              <span className="text-sm font-medium text-slate-500">
+                {perMonth}
+              </span>
             </div>
 
-            {/* Table Footer CTA */}
-            <div className="bg-slate-50/50 p-6 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm">
-              <span className="text-slate-500 font-medium flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-brand" /> bKash payments
-                are manually approved within 2 hours.
-              </span>
-              <div className="flex gap-4">
-                <a
-                  href="#demo"
-                  className="text-brand font-bold hover:underline"
-                >
-                  How it works first?
-                </a>
-              </div>
+            <ul className="mt-7 space-y-3.5 flex-1">
+              {renderFeatures("premium")}
+            </ul>
+
+            <div className="mt-8 flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3.5 text-sm font-semibold text-amber-800">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-500" />
+              {tiers.premium.includedNote}
             </div>
+
+            <button
+              type="button"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-amber-400 py-3.5 px-6 text-sm font-bold text-amber-950 shadow-lg shadow-amber-400/25 transition-colors hover:bg-amber-300"
+            >
+              <Lock className="w-4 h-4" />
+              {tiers.premium.cta}
+            </button>
           </div>
         </div>
 
@@ -549,11 +308,10 @@ const Pricing = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h3 className="text-2xl md:text-3xl font-bold text-slate-900 mb-4 tracking-tight">
-              Frequently Asked Questions
+              {content.pricing.faqHeading}
             </h3>
             <p className="text-slate-500 text-sm md:text-base">
-              Got questions before you upgrade? We have answers. If you need
-              anything else, feel free to contact us.
+              {content.pricing.faqDescription}
             </p>
           </div>
 
@@ -604,42 +362,193 @@ const Pricing = () => {
           </div>
         </div>
 
-        {/* Testimonial / Social Proof Section */}
-        <section className="mt-16 py-20 bg-white px-4 border border-slate-100 rounded-3xl shadow-sm">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex justify-center gap-1 mb-8">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <svg
-                  key={i}
-                  className="w-6 h-6 text-amber-400 fill-current"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
+        {/* =====================================================
+            TRACTION & VALIDATION
+        ====================================================== */}
+
+        <section className="mt-20 sm:mt-28">
+          {/* =====================================================
+      SECTION HEADER
+  ====================================================== */}
+
+          <div className="max-w-2xl mx-auto text-center mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand/5 border border-brand/10 text-brand text-xs font-bold tracking-wide mb-5">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand" />
+              STUDENT VALIDATION
             </div>
 
-            <blockquote className="text-2xl md:text-3xl font-medium text-slate-800 italic mb-8 leading-relaxed">
-              "I used to spend hours searching through YouTube videos and
-              guidebooks whenever I got stuck. With E TESTPaper, I can ask
-              JARVIS directly and actually understand where I went wrong. It
-              feels like having a study partner available whenever I need one."
-            </blockquote>
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
+              {validation.heading}
+            </h3>
 
-            <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-slate-100 overflow-hidden">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Arif"
-                  alt="Student"
-                />
-              </div>
+            <p className="mt-4 text-sm sm:text-base md:text-lg text-slate-500 leading-relaxed">
+              {validation.subheading}
+            </p>
+          </div>
 
-              <div className="text-left">
-                <p className="font-bold text-slate-900">Arif Hossain</p>
-                <p className="text-slate-500 text-sm uppercase tracking-widest font-bold">
-                  HSC Science Student
-                </p>
-              </div>
+          {/* =====================================================
+      METRICS
+  ====================================================== */}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {validation.stats.map((stat, idx) => {
+              const tone = statTones[idx % statTones.length];
+
+              return (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: idx * 0.06,
+                  }}
+                  className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-slate-300 hover:shadow-lg"
+                >
+                  {/* Subtle background glow */}
+
+                  <div
+                    className={`absolute -right-10 -top-10 h-28 w-28 rounded-full blur-3xl opacity-0 transition-opacity duration-500 group-hover:opacity-100 ${tone.glow}`}
+                  />
+
+                  <div className="relative">
+                    {/* Small indicator */}
+
+                    <div className="flex items-center justify-between mb-8">
+                      <div className={`w-2 h-2 rounded-full ${tone.dot}`} />
+
+                      {stat.total && (
+                        <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">
+                          Response
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Number */}
+
+                    <div className="flex items-baseline gap-1">
+                      <span
+                        className={`text-4xl sm:text-5xl font-extrabold tracking-[-0.04em] ${tone.value}`}
+                      >
+                        {stat.value}
+                      </span>
+
+                      {stat.total && (
+                        <>
+                          <span className="text-xl sm:text-2xl font-bold text-slate-300">
+                            /
+                          </span>
+
+                          <span className="text-xl sm:text-2xl font-bold text-slate-400">
+                            {stat.total}
+                          </span>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Label */}
+
+                    <p className="mt-3 max-w-[220px] text-sm font-semibold leading-relaxed text-slate-600">
+                      {stat.label}
+                    </p>
+
+                    {/* Bottom accent */}
+
+                    <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-slate-100">
+                      <div
+                        className={`h-full rounded-full transition-all duration-700 group-hover:w-full ${tone.bar}`}
+                        style={{
+                          width: stat.total
+                            ? `${(Number(stat.value) / Number(stat.total)) * 100}%`
+                            : "65%",
+                        }}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* =====================================================
+      STUDENT TESTIMONIALS
+  ====================================================== */}
+
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {validation.quotes.map((item, idx) => (
+              <motion.figure
+                key={item.name}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{
+                  duration: 0.45,
+                  delay: idx * 0.08,
+                }}
+                className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+              >
+                {/* Quote mark */}
+
+                <div className="absolute right-6 top-4 select-none text-7xl font-serif font-bold leading-none text-slate-100 transition-colors duration-300 group-hover:text-brand/10">
+                  “
+                </div>
+
+                <div className="relative">
+                  {/* Rating */}
+
+                  <div className="flex items-center gap-1 mb-6">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span key={star} className="text-sm text-amber-400">
+                        ★
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Quote */}
+
+                  <blockquote className="max-w-xl text-base sm:text-lg text-slate-700 leading-relaxed font-medium">
+                    “{item.quote}”
+                  </blockquote>
+
+                  {/* Author */}
+
+                  <figcaption className="mt-7 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+                      <span className="text-sm font-bold text-slate-500">
+                        {item.name.charAt(0)}
+                      </span>
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">
+                        {item.name}
+                      </p>
+
+                      <p className="mt-0.5 text-xs text-slate-400">
+                        {item.role}
+                      </p>
+                    </div>
+
+                    <div className="ml-auto hidden sm:flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                      Student
+                    </div>
+                  </figcaption>
+                </div>
+              </motion.figure>
+            ))}
+          </div>
+
+          {/* =====================================================
+      SOURCE / VALIDATION NOTE
+  ====================================================== */}
+
+          <div className="mt-10 flex justify-center">
+            <div className="max-w-3xl rounded-xl border border-slate-100 bg-slate-50/70 px-5 py-4">
+              <p className="text-center text-[11px] sm:text-xs text-slate-400 leading-relaxed">
+                {validation.note}
+              </p>
             </div>
           </div>
         </section>
