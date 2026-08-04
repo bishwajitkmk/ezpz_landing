@@ -1,0 +1,52 @@
+<svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="purpleC3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#6D28D9"/>
+    </linearGradient>
+    <linearGradient id="lavC3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C4B5FD"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="orangeC3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <filter id="cShadow3" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#cShadow3)">
+    <circle cx="150" cy="90" r="62" fill="url(#purpleC3)"/>
+    <circle cx="210" cy="168" r="62" fill="url(#lavC3)"/>
+    <circle cx="100" cy="192" r="68" fill="url(#orangeC3)"/>
+  </g>
+
+  <!-- calculator (top) -->
+  <g transform="translate(150,90)" stroke="#FFFFFF" stroke-width="4.5" fill="none">
+    <rect x="-20" y="-26" width="40" height="52" rx="8"/>
+    <rect x="-13" y="-19" width="26" height="12" rx="2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="-8" cy="3" r="2.2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="0" cy="3" r="2.2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="8" cy="3" r="2.2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="-8" cy="12" r="2.2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="0" cy="12" r="2.2" fill="#FFFFFF" stroke="none"/>
+    <circle cx="8" cy="12" r="2.2" fill="#FFFFFF" stroke="none"/>
+  </g>
+
+  <!-- robot (bottom right) -->
+  <g transform="translate(210,168)" stroke="#FFFFFF" stroke-width="4.5" fill="none" stroke-linejoin="round">
+    <rect x="-22" y="-9" width="44" height="30" rx="8"/>
+    <path d="M0 -9 L0 -20"/>
+    <circle cx="0" cy="-24" r="4" fill="#FFFFFF" stroke="none"/>
+    <circle cx="-9" cy="6" r="4" fill="#FFFFFF" stroke="none"/>
+    <circle cx="9" cy="6" r="4" fill="#FFFFFF" stroke="none"/>
+  </g>
+
+  <!-- flask (bottom left, front, largest) -->
+  <g transform="translate(100,192)" stroke="#FFFFFF" stroke-width="5" fill="none">
+    <path d="M-9 -28 L9 -28 L9 -6 L24 22 C27 29 22 36 14 36 L-14 36 C-22 36 -27 29 -24 22 L-9 -6 Z"/>
+    <path d="M-13 -28 L13 -28" stroke-linecap="round"/>
+  </g>
+</svg>
