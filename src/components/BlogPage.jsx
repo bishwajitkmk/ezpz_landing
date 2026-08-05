@@ -27,33 +27,33 @@ const BlogPage = ({ onBack }) => {
   const { content } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+    <div className="min-h-dvh bg-slate-50 text-slate-900">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:py-24">
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:text-brand-hover transition-colors mb-8"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-brand hover:text-brand-hover transition-colors mb-6 sm:mb-8"
         >
           <ArrowLeft className="w-4 h-4" />
           {content.blog.back}
         </button>
 
-        <div className="mb-10 rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <div className="mb-8 sm:mb-10 rounded-3xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-2 text-brand mb-4">
             <BookOpen className="w-5 h-5" />
             <span className="text-sm font-semibold uppercase tracking-[0.2em]">
               {content.blog.badge}
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-4">
             {content.blog.heading}
           </h1>
-          <p className="text-lg text-slate-600 max-w-2xl">
+          <p className="text-base sm:text-lg text-slate-600 max-w-2xl">
             {content.blog.description}
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {content.blog.posts.map((post, index) => (
             <article
               key={post.title}

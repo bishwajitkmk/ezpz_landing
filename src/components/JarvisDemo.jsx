@@ -108,7 +108,9 @@ const JarvisDemo = () => {
   };
 
   return (
-    <section id="demo" className="py-16 sm:py-24 px-4 overflow-hidden">
+    /* Rendered inside Hero's padded container, so it adds no horizontal padding
+       of its own. `text-left` undoes the centring Hero applies to the chat. */
+    <section id="demo" className="py-12 sm:py-20 md:py-24 overflow-hidden text-left">
       <div className="max-w-7xl mx-auto">
         {/* =====================================================
             SECTION HEADER
@@ -144,7 +146,7 @@ const JarvisDemo = () => {
           <div
             role="tablist"
             aria-label="Demo subject"
-            className="self-center lg:self-auto flex flex-wrap justify-center gap-3 rounded-full border border-slate-200 bg-white/90 p-2 shadow-sm backdrop-blur lg:sticky lg:top-24 lg:w-48 lg:shrink-0 lg:flex-col lg:flex-nowrap lg:rounded-3xl lg:p-3"
+            className="w-full self-center lg:self-auto flex justify-center gap-1.5 sm:gap-3 rounded-full border border-slate-200 bg-white/90 p-1.5 sm:p-2 shadow-sm backdrop-blur lg:sticky lg:top-24 lg:w-48 lg:shrink-0 lg:flex-col lg:rounded-3xl lg:p-3"
           >
             {subjects.map((subject, index) => {
               const isActive = index === activeIndex;
@@ -158,13 +160,17 @@ const JarvisDemo = () => {
                   aria-selected={isActive}
                   aria-controls="demo-panel"
                   onClick={() => selectSubject(index)}
-                  className={`relative min-w-33 overflow-hidden rounded-full border-2 px-5 py-3 text-sm font-semibold transition-all duration-300 lg:w-full lg:rounded-2xl lg:text-left ${
+                  /* Equal-width pills on phones so three subjects fit one row
+                     at 320px without wrapping the selector to two lines. */
+                  className={`relative min-w-0 flex-1 overflow-hidden whitespace-nowrap rounded-full border-2 px-2 py-3 text-xs sm:px-5 sm:text-sm font-semibold transition-all duration-300 lg:w-full lg:flex-none lg:rounded-2xl lg:text-left ${
                     isActive
                       ? "border-brand bg-brand text-white shadow-md"
                       : "border-transparent bg-white text-slate-700 hover:border-brand/40 hover:text-brand"
                   }`}
                 >
-                  <span className="mr-2 inline-block h-2.5 w-2.5 rounded-full bg-current" />
+                  {/* Dropped on the narrowest phones so "Chemistry" still fits
+                      on one line inside a third of a 320px screen. */}
+                  <span className="mr-2 hidden sm:inline-block h-2.5 w-2.5 rounded-full bg-current" />
                   {subject}
 
                   {/* Countdown to the next subject */}
@@ -247,8 +253,8 @@ const JarvisDemo = () => {
                       USER QUESTION
                   ================================================== */}
 
-                  <div className="flex gap-3 sm:gap-4 justify-end mb-6">
-                    <div className="bg-brand text-white p-4 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm">
+                  <div className="flex gap-2 sm:gap-4 justify-end mb-6">
+                    <div className="bg-brand text-white p-3.5 sm:p-4 rounded-2xl rounded-tr-none max-w-[85%] shadow-sm">
                       <p className="text-sm md:text-base leading-relaxed">
                         {currentDemo.question}
                       </p>
@@ -263,17 +269,17 @@ const JarvisDemo = () => {
                       JARVIS RESPONSE
                   ================================================== */}
 
-                  <div className="flex gap-3 sm:gap-4">
+                  <div className="flex gap-2 sm:gap-4">
                     {/* JARVIS ICON */}
 
                     <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center shrink-0">
                       <Sparkles className="w-4 h-4 text-white" />
                     </div>
 
-                    <div className="bg-white border border-slate-100 p-5 sm:p-6 rounded-2xl rounded-tl-none flex-1 shadow-sm">
+                    <div className="bg-white border border-slate-100 p-4 sm:p-6 rounded-2xl rounded-tl-none flex-1 min-w-0 shadow-sm">
                       {/* RESPONSE HEADER */}
 
-                      <div className="flex items-center gap-2 mb-4">
+                      <div className="flex flex-wrap items-center gap-2 mb-4">
                         <span className="font-bold text-slate-900">JARVIS</span>
 
                         <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded uppercase font-bold tracking-wider">
@@ -327,9 +333,11 @@ const JarvisDemo = () => {
                           delay: 0.1,
                           duration: 0.3,
                         }}
-                        className="bg-brand/5 border border-brand/10 rounded-xl py-4 px-3 text-center mb-4"
+                        /* Formulae are the one thing that cannot wrap, so on a
+                           narrow phone the box scrolls instead of overflowing. */
+                        className="bg-brand/5 border border-brand/10 rounded-xl py-4 px-3 text-center mb-4 overflow-x-auto"
                       >
-                        <span className="font-serif italic text-xl sm:text-2xl text-brand">
+                        <span className="font-serif italic whitespace-nowrap text-lg sm:text-2xl text-brand">
                           {currentDemo.formula}
                         </span>
                       </motion.div>
@@ -346,10 +354,10 @@ const JarvisDemo = () => {
                           RESPONSE ACTIONS
                       ================================================== */}
 
-                      <div className="flex items-center gap-4 mt-5 pt-4 border-t border-slate-100">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-5 pt-4 border-t border-slate-100">
                         <button
                           type="button"
-                          className="flex items-center gap-1.5 text-xs font-bold text-brand hover:text-brand-hover transition-colors"
+                          className="flex min-h-9 items-center gap-1.5 text-xs font-bold text-brand hover:text-brand-hover transition-colors"
                         >
                           <Volume2 className="w-4 h-4" />
                           Listen
@@ -357,7 +365,7 @@ const JarvisDemo = () => {
 
                         <button
                           type="button"
-                          className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
+                          className="flex min-h-9 items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-slate-600 transition-colors"
                         >
                           <MessageCircle className="w-4 h-4" />
                           Ask Follow-up

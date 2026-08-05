@@ -13,7 +13,7 @@ function ScrambleWord() {
   useEffect(() => {
     const target = WORDS[wordIndex];
     let frame = 0;
-    const totalFrames = 15;
+    const totalFrames = 10;
 
     const scrambleInterval = setInterval(() => {
       frame++;
@@ -43,7 +43,7 @@ function ScrambleWord() {
   useEffect(() => {
     const wordTimer = setInterval(() => {
       setWordIndex((i) => (i + 1) % WORDS.length);
-    }, 3000);
+    }, 5000);
 
     return () => clearInterval(wordTimer);
   }, []);
@@ -99,7 +99,7 @@ const Features = () => {
   ];
 
   return (
-    <section id="features" className="py-16 sm:py-24 bg-surface px-4">
+    <section id="features" className="py-16 sm:py-24 bg-surface px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">

@@ -1,17 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowRight,
-  Play,
-  Sparkles,
-  Volume2,
-  Languages,
-  CheckCircle2,
-  BookOpen,
-} from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowRight, Play } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
 import JarvisDemo from "./JarvisDemo";
-
+import FloatingElements from "./FloatingElements";
+import Particle from "./Particle";
 
 const SCRAMBLE_WORDS = ["Physics", "Chemistry", "Math"];
 
@@ -45,8 +38,8 @@ const ScrambleWord = () => {
       if (!isPaused) {
         elapsedRef.current += delta;
 
-        // Change subject every 3.2 seconds
-        if (elapsedRef.current >= 3200) {
+        // Change subject every 5 seconds
+        if (elapsedRef.current >= 5000) {
           elapsedRef.current = 0;
 
           setWordIndex((current) => (current + 1) % SCRAMBLE_WORDS.length);
@@ -57,8 +50,8 @@ const ScrambleWord = () => {
 
         const target = SCRAMBLE_WORDS[wordIndex];
 
-        // Scramble happens during the first ~800ms
-        const scrambleDuration = 800;
+        // Scramble during the first second
+        const scrambleDuration = 1000;
 
         if (elapsedRef.current < scrambleDuration) {
           const progress = elapsedRef.current / scrambleDuration;
@@ -69,12 +62,12 @@ const ScrambleWord = () => {
           const scrambled = target
             .split("")
             .map((char, index) => {
-              // First letter is ALWAYS the real subject initial
+              // First letter always remains the real initial
               if (index === 0) {
                 return char;
               }
 
-              // Revealed characters
+              // Reveal characters progressively
               if (index < revealCount) {
                 return char;
               }
@@ -103,9 +96,6 @@ const ScrambleWord = () => {
   const handleMouseEnter = () => {
     const initial = display.charAt(0).toUpperCase();
 
-    // P → Physics
-    // C → Chemistry
-    // M → Math
     const matchedWord = SUBJECT_BY_INITIAL[initial];
 
     if (matchedWord) {
@@ -122,122 +112,227 @@ const ScrambleWord = () => {
 
   return (
     <span
-      className="inline-block text-brand cursor-default"
+      className="inline-grid align-baseline text-brand cursor-default"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {display}
+      {/* Invisible width anchor */}
+      <span aria-hidden="true" className="invisible col-start-1 row-start-1">
+        Chemistry
+      </span>
+
+      <span className="col-start-1 row-start-1 text-left">{display}</span>
     </span>
   );
 };
 
-const heroSteps = [
-  {
-    type: "text",
-    content:
-      "The Carnot cycle is a theoretical ideal cycle consisting of four reversible processes.",
-  },
-  {
-    type: "list",
-    content: [
-      "Isothermal Expansion",
-      "Adiabatic Expansion",
-      "Isothermal Compression",
-      "Adiabatic Compression",
-    ],
-  },
-  {
-    type: "formula",
-    content: "η = 1 − T₂ / T₁",
-  },
-  {
-    type: "text",
-    content:
-      "It is considered the most efficient because it represents the maximum possible efficiency between two temperature reservoirs.",
-  },
-];
-
 const Hero = () => {
-  const [visibleSteps, setVisibleSteps] = useState(0);
-  const { content, language } = useLanguage();
-
-  useEffect(() => {
-    let mounted = true;
-
-    const runAnimation = async () => {
-      while (mounted) {
-        setVisibleSteps(0);
-
-        for (let i = 1; i <= heroSteps.length; i++) {
-          await new Promise((resolve) => setTimeout(resolve, 750));
-
-          if (!mounted) return;
-
-          setVisibleSteps(i);
-        }
-
-        await new Promise((resolve) => setTimeout(resolve, 4500));
-      }
-    };
-
-    runAnimation();
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const heroRef = useRef(null);
+  const { content } = useLanguage();
 
   return (
-    <section className="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 overflow-hidden">
-      <div className="max-w-5xl mx-auto text-center">
+    <>
+      {/* =========================================================
+          HERO SECTION
+      ========================================================== */}
+
+      <section
+        ref={heroRef}
+        className="relative overflow-hidden pt-24 sm:pt-32 pb-20 sm:pb-28 px-4"
+      >
         {/* =====================================================
-            HERO COPY
+            BACKGROUND EFFECTS
         ====================================================== */}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-6">
-            {content.hero.heading[0]} <ScrambleWord />
-            <br className="hidden md:block" />
-            {content.hero.heading[1]}{" "}
-            <span className="text-brand">{content.hero.heading[2]}</span>
-          </h1>
+        <Particle />
 
-          <p className="text-lg sm:text-xl text-slate-600 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed">
-            {content.hero.description}
-          </p>
-
-          {/* CTA */}
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              type="button"
-              className="w-full sm:w-auto bg-[#de7437] text-white px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 hover:bg-brand-hover hover:scale-105 duration-300 transition-all shadow-lg hover:shadow-brand/25"
-            >
-              {content.hero.ctaPrimary}
-              <ArrowRight className="w-5 h-5" />
-            </button>
-
-            <button
-              type="button"
-              className="w-full sm:w-auto bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-full font-semibold text-lg flex items-center justify-center gap-2 hover:text-white hover:bg-slate-600 hover:scale-105 duration-300 transition-all"
-            >
-              {content.hero.ctaSecondary}
-              <Play className="w-5 h-5 fill-slate-700" />
-            </button>
-          </div>
-        </motion.div>
+        <FloatingElements containerRef={heroRef} />
 
         {/* =====================================================
-            PRODUCT PREVIEW
+            HERO CONTENT
         ====================================================== */}
 
-        <JarvisDemo/>
-      </div>
-    </section>
+        <div className="relative z-10 max-w-5xl mx-auto text-center">
+          <motion.div
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              duration: 0.6,
+            }}
+          >
+            {/* =================================================
+                HEADLINE
+            ================================================== */}
+
+            <h1
+              className="
+    text-center
+    text-3xl
+    sm:text-5xl
+    md:text-6xl
+    lg:text-7xl
+    font-bold
+    text-slate-900
+    tracking-tight
+    leading-[1.15]
+    sm:leading-[1.1]
+    mb-5
+    sm:mb-6
+  "
+            >
+              <span className="block text-center">
+                {content.hero.heading[0]} <ScrambleWord />
+              </span>
+
+              <span className="block text-center">
+                {content.hero.heading[1]}{" "}
+                <span className="text-brand">{content.hero.heading[2]}</span>
+              </span>
+            </h1>
+            {/* =================================================
+                DESCRIPTION
+            ================================================== */}
+
+            <p
+              className="
+                text-base
+                sm:text-lg
+                md:text-xl
+                text-slate-600
+                mb-8
+                sm:mb-10
+                max-w-2xl
+                mx-auto
+                leading-relaxed
+              "
+            >
+              {content.hero.description}
+            </p>
+
+            {/* =================================================
+                CTA
+            ================================================== */}
+
+            <div
+              className="
+                flex
+                flex-col
+                sm:flex-row
+                items-center
+                justify-center
+                gap-3
+                sm:gap-4
+              "
+            >
+              {/* Primary CTA */}
+
+              <button
+                type="button"
+                className="
+                  w-full
+                  max-w-xs
+                  sm:w-auto
+                  sm:max-w-none
+                  bg-[#de7437]
+                  text-white
+                  px-6
+                  sm:px-8
+                  py-3.5
+                  sm:py-4
+                  rounded-full
+                  font-semibold
+                  text-base
+                  sm:text-lg
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  hover:bg-brand-hover
+                  hover:scale-105
+                  duration-300
+                  transition-all
+                  shadow-lg
+                  hover:shadow-brand/25
+                "
+              >
+                <span className="min-w-0 text-center leading-snug">
+                  {content.hero.ctaPrimary}
+                </span>
+
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </button>
+
+              {/* Secondary CTA */}
+
+              <button
+                type="button"
+                className="
+                  w-full
+                  max-w-xs
+                  sm:w-auto
+                  sm:max-w-none
+                  bg-white
+                  text-slate-700
+                  border
+                  border-slate-200
+                  px-6
+                  sm:px-8
+                  py-3.5
+                  sm:py-4
+                  rounded-full
+                  font-semibold
+                  text-base
+                  sm:text-lg
+                  flex
+                  items-center
+                  justify-center
+                  gap-2
+                  hover:text-white
+                  hover:bg-slate-600
+                  hover:scale-105
+                  duration-300
+                  transition-all
+                "
+              >
+                <span className="min-w-0 text-center leading-snug">
+                  {content.hero.ctaSecondary}
+                </span>
+
+                <Play className="w-5 h-5 shrink-0 fill-slate-700" />
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          JARVIS DEMO SECTION
+          
+          IMPORTANT:
+          This is intentionally OUTSIDE the Hero section.
+      ========================================================== */}
+
+      <section
+        id="demo"
+        className="
+          relative
+          py-4
+          sm:py-24
+          px-4
+          mt-[-150px]
+          bg-white
+          overflow-hidden
+        "
+      >
+        <JarvisDemo />
+      </section>
+    </>
   );
 };
 

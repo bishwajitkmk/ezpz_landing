@@ -10,10 +10,24 @@
 
 html {
   scroll-behavior: smooth;
+
+  /* Stops iOS Safari from inflating text when the phone is turned sideways. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+html,
+body {
+  /* `clip` keeps position: sticky working inside; `hidden` is the fallback for
+     browsers that predate it (Safari < 16). */
+  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
-  overflow-x: hidden;
+  /* Room for the notch / home indicator on phones in landscape. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
 }
 
 * {
@@ -29,9 +43,11 @@ section[id] {
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* The design is light-only — without this, a phone in dark mode renders
+     form controls, scrollbars and unstyled text against a dark UA palette. */
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -39,9 +55,46 @@ section[id] {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Grey flash on tap in mobile Safari / Chrome Android. */
+a,
+button,
+[role="button"],
+[role="tab"],
+[role="switch"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Headings break awkwardly on narrow screens without this. */
+h1,
+h2,
+h3 {
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+p {
+  overflow-wrap: break-word;
+}
+
+/* Media should never be the cause of a horizontal scrollbar. */
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

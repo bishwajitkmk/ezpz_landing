@@ -5,9 +5,9 @@ import { useLanguage } from "../i18n/LanguageContext";
 const Footer = () => {
   const { content } = useLanguage();
   return (
-    <footer className="bg-white border-t border-slate-100 pt-20 pb-10 px-4">
+    <footer className="bg-white border-t border-slate-100 pt-16 sm:pt-20 pb-[calc(2.5rem+env(safe-area-inset-bottom))] px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16">
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-9 h-9 rounded-xl bg-brand/10 flex items-center justify-center ring-1 ring-brand/20">
@@ -24,11 +24,12 @@ const Footer = () => {
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
               {content.footer.description}
             </p>
-            <div className="flex gap-4">
+            {/* Negative margin keeps the 44px hit boxes visually flush left. */}
+            <div className="flex gap-1 -ml-3">
               {/* Custom Twitter / X Icon */}
               <a
                 href="#"
-                className="text-slate-400 hover:text-brand transition-colors"
+                className="flex h-11 w-11 items-center justify-center text-slate-400 hover:text-brand transition-colors"
               >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -37,7 +38,7 @@ const Footer = () => {
               {/* Custom Github Icon */}
               <a
                 href="#"
-                className="text-slate-400 hover:text-brand transition-colors"
+                className="flex h-11 w-11 items-center justify-center text-slate-400 hover:text-brand transition-colors"
               >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                   <path
@@ -50,7 +51,7 @@ const Footer = () => {
               {/* Custom Linkedin Icon */}
               <a
                 href="#"
-                className="text-slate-400 hover:text-brand transition-colors"
+                className="flex h-11 w-11 items-center justify-center text-slate-400 hover:text-brand transition-colors"
               >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                   <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z" />
@@ -65,22 +66,34 @@ const Footer = () => {
             </h4>
             <ul className="space-y-4 text-sm text-slate-600">
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.questionBank}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.aiTutor}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.mcqPractice}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.boardSolutions}
                 </a>
               </li>
@@ -93,22 +106,34 @@ const Footer = () => {
             </h4>
             <ul className="space-y-4 text-sm text-slate-600">
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.syllabus}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.studyGuides}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.blog}
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-brand transition-colors">
+                <a
+                  href="#"
+                  className="inline-flex min-h-9 items-center hover:text-brand transition-colors"
+                >
                   {content.footer.links.helpCenter}
                 </a>
               </li>
@@ -122,13 +147,18 @@ const Footer = () => {
             <p className="text-slate-500 text-sm mb-4">
               {content.footer.newsletterDescription}
             </p>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <input
                 type="email"
+                inputMode="email"
+                autoComplete="email"
                 placeholder="email@example.com"
-                className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm flex-1 outline-none focus:border-brand transition-colors"
+                aria-label={content.footer.newsletterHeading}
+                /* text-base keeps iOS Safari from zooming in on focus, and
+                   min-w-0 stops the input pushing the button off-screen. */
+                className="bg-slate-50 border border-slate-200 rounded-lg px-3 min-h-11 min-w-0 flex-1 text-base sm:text-sm outline-none focus:border-brand transition-colors"
               />
-              <button className="bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-slate-800 transition-colors">
+              <button className="bg-slate-900 text-white px-4 min-h-11 rounded-lg text-sm font-bold hover:bg-slate-800 transition-colors">
                 {content.footer.join}
               </button>
             </div>
@@ -136,12 +166,18 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-slate-50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-400 uppercase tracking-widest font-bold">
-          <p>{content.footer.rights}</p>
-          <div className="flex gap-8">
-            <a href="#" className="hover:text-slate-600 transition-colors">
+          <p className="text-center md:text-left">{content.footer.rights}</p>
+          <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
+            <a
+              href="#"
+              className="inline-flex min-h-9 items-center hover:text-slate-600 transition-colors"
+            >
               {content.footer.privacy}
             </a>
-            <a href="#" className="hover:text-slate-600 transition-colors">
+            <a
+              href="#"
+              className="inline-flex min-h-9 items-center hover:text-slate-600 transition-colors"
+            >
               {content.footer.terms}
             </a>
           </div>

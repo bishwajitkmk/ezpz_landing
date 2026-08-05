@@ -51,12 +51,33 @@ const tierFeatures = {
   ],
 };
 
-/* Tints for the four traction stats, in slide order. */
+/* Tints for the four traction stats, in slide order. Each tone needs a key for
+   every slot the card paints: the number, the dot, the bar and the hover glow. */
 const statTones = [
-  { card: "border-blue-100 bg-blue-50", value: "text-blue-600" },
-  { card: "border-violet-100 bg-violet-50", value: "text-brand" },
-  { card: "border-amber-100 bg-amber-50", value: "text-amber-600" },
-  { card: "border-slate-200 bg-white", value: "text-brand" },
+  {
+    value: "text-blue-600",
+    dot: "bg-blue-500",
+    bar: "bg-blue-500",
+    glow: "bg-blue-200",
+  },
+  {
+    value: "text-brand",
+    dot: "bg-brand",
+    bar: "bg-brand",
+    glow: "bg-brand/30",
+  },
+  {
+    value: "text-amber-600",
+    dot: "bg-amber-500",
+    bar: "bg-amber-500",
+    glow: "bg-amber-200",
+  },
+  {
+    value: "text-brand",
+    dot: "bg-brand",
+    bar: "bg-brand",
+    glow: "bg-brand/30",
+  },
 ];
 
 const quoteAccents = ["border-l-blue-400", "border-l-amber-400"];
@@ -145,10 +166,10 @@ const Pricing = () => {
   return (
     <section
       id="pricing"
-      className="py-16 sm:py-24 px-4 overflow-hidden relative border-t border-slate-100 bg-linear-to-br from-amber-50 via-white to-violet-100"
+      className="py-16 sm:py-24 px-4 sm:px-6 overflow-hidden relative border-t border-slate-100 bg-linear-to-br from-amber-50 via-white to-violet-100"
     >
       {/* Background Ornaments */}
-      <div className="absolute top-1/4 left-1/2 w-200 h-200 bg-brand/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 w-96 h-96 sm:w-200 sm:h-200 bg-brand/5 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* =====================================================
@@ -165,7 +186,9 @@ const Pricing = () => {
             PLAN CARDS
         ====================================================== */}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-stretch mb-16 sm:mb-24">
+        {/* Three tiers only get their own column at lg — at md they squeeze to
+            ~230px and the feature rows wrap badly. */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mb-16 sm:mb-24 max-w-md mx-auto lg:max-w-none">
           {/* =================================================
               BASIC
           ================================================== */}
@@ -197,7 +220,7 @@ const Pricing = () => {
               PRO
           ================================================== */}
 
-          <div className="relative flex flex-col rounded-3xl border border-brand/20 bg-white p-6 sm:p-8 shadow-xl ring-1 ring-brand/5 md:-mt-2">
+          <div className="relative flex flex-col rounded-3xl border border-brand/20 bg-white p-6 sm:p-8 shadow-xl ring-1 ring-brand/5 lg:-mt-2">
             <span className="absolute -top-3.5 right-6 inline-flex items-center gap-1.5 rounded-full bg-brand px-3.5 py-1.5 text-xs font-bold text-white shadow-md">
               <Crown className="w-3.5 h-3.5" />
               {tiers.pro.badge}
@@ -240,7 +263,9 @@ const Pricing = () => {
                 aria-checked={practiceAddon}
                 aria-label={tiers.pro.addonAria}
                 onClick={() => setPracticeAddon((prev) => !prev)}
-                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 ${
+                /* `before` widens the touch target to ~68x48 without changing
+                   how the switch looks. */
+                className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-300 before:absolute before:-inset-2.5 before:content-[''] ${
                   practiceAddon ? "bg-brand" : "bg-slate-200"
                 }`}
               >
@@ -325,9 +350,10 @@ const Pricing = () => {
                 >
                   <button
                     onClick={() => toggleFaq(idx)}
-                    className="w-full text-left p-6 flex justify-between items-center gap-4 focus:outline-none"
+                    aria-expanded={isOpen}
+                    className="w-full text-left p-5 sm:p-6 flex justify-between items-center gap-3 sm:gap-4 focus:outline-none"
                   >
-                    <span className="font-extrabold text-slate-800 text-base md:text-lg leading-relaxed">
+                    <span className="font-extrabold text-slate-800 text-sm sm:text-base md:text-lg leading-relaxed">
                       {faq.q}
                     </span>
                     <span
@@ -350,7 +376,7 @@ const Pricing = () => {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25, ease: "easeInOut" }}
                       >
-                        <div className="px-6 pb-6 text-sm md:text-base text-slate-600 leading-relaxed border-t border-slate-50 pt-4 bg-slate-50/20">
+                        <div className="px-5 sm:px-6 pb-6 text-sm md:text-base text-slate-600 leading-relaxed border-t border-slate-50 pt-4 bg-slate-50/20">
                           {faq.a}
                         </div>
                       </motion.div>
@@ -449,7 +475,7 @@ const Pricing = () => {
 
                     {/* Label */}
 
-                    <p className="mt-3 max-w-[220px] text-sm font-semibold leading-relaxed text-slate-600">
+                    <p className="mt-3 max-w-55 text-sm font-semibold leading-relaxed text-slate-600">
                       {stat.label}
                     </p>
 

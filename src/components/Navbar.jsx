@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, X, Languages } from "lucide-react";
 import logo from "../assets/smart_learning_icon_only.svg";
 import { useLanguage } from "../i18n/LanguageContext";
@@ -8,6 +8,35 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
   const { toggleLanguage, content } = useLanguage();
 
   const closeMenu = () => setMobileMenuOpen(false);
+
+  /* Rotating the phone past the md breakpoint would otherwise leave the panel
+     mounted but invisible, and the page scroll-locked. */
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const desktop = window.matchMedia("(min-width: 768px)");
+
+    const handleBreakpoint = (event) => {
+      if (event.matches) setMobileMenuOpen(false);
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    desktop.addEventListener("change", handleBreakpoint);
+    window.addEventListener("keydown", handleKeyDown);
+
+    /* Stop the page behind the open menu from scrolling under the finger. */
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      desktop.removeEventListener("change", handleBreakpoint);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileMenuOpen]);
 
   const scrollToSection = (event, sectionId) => {
     event.preventDefault();
@@ -46,7 +75,10 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+    /* Fixed elements sit outside the body's safe-area padding, so the bar
+       carries its own — otherwise the logo lands under the notch in
+       landscape. */
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2 min-w-0">
@@ -97,74 +129,80 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
             </button>
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
-            <button className="relative overflow-hidden text-sm font-medium text-slate-600 px-4 py-2 rounded-full transition-all duration-300 hover:text-black before:absolute before:inset-0 before:rounded-full before:bg-brand/10 before:scale-0 before:transition-transform before:duration-200 hover:before:scale-105">
-              <span className="relative z-10">{content.navbar.login}</span>
-            </button>
-            <button className="bg-brand text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-brand-hover transition-all shadow-sm">
-              {content.navbar.getStarted}
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
             <button
               type="button"
-              className="p-2 rounded-full text-slate-600 hover:bg-slate-100"
+              className="flex h-11 w-11 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
               onClick={toggleLanguage}
               aria-label="Switch language"
             >
-              <Languages className="w-4 h-4" />
+              <Languages className="w-5 h-5" />
             </button>
+            <div className="hidden md:flex items-center gap-4">
+              <button className="relative overflow-hidden text-sm font-medium text-slate-600 px-4 py-2 rounded-full transition-all duration-300 hover:text-black before:absolute before:inset-0 before:rounded-full before:bg-brand/10 before:scale-0 before:transition-transform before:duration-200 hover:before:scale-105">
+                <span className="relative z-10">{content.navbar.login}</span>
+              </button>
+              <button className="bg-brand text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-brand-hover transition-all shadow-sm">
+                {content.navbar.getStarted}
+              </button>
+            </div>
             <button
               type="button"
-              className="md:hidden p-2 rounded-full text-slate-600 hover:bg-slate-100"
+              className="md:hidden flex h-11 w-11 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
               onClick={() => setMobileMenuOpen((open) => !open)}
               aria-label={content.navbar.mobileMenuLabel}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
             >
               {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" />
               ) : (
-                <Menu className="w-5 h-5" />
+                <Menu className="w-6 h-6" />
               )}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-100 bg-white/95 backdrop-blur py-4 space-y-3">
+          <div
+            id="mobile-menu"
+            /* Scrolls internally so the panel still works on a landscape phone,
+               where the viewport is only a few hundred pixels tall. */
+            className="md:hidden max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain border-t border-slate-100 bg-white/95 backdrop-blur py-3 pb-[calc(1rem+env(safe-area-inset-bottom))] space-y-1"
+          >
             <a
               href="#features"
               onClick={(event) => scrollToSection(event, "features")}
-              className="block px-1 py-2 text-sm font-medium text-slate-600"
+              className="flex min-h-11 items-center rounded-xl px-3 text-base font-medium text-slate-600 active:bg-slate-50"
             >
               {content.navbar.features}
             </a>
             <a
               href="#demo"
               onClick={(event) => scrollToSection(event, "demo")}
-              className="block px-1 py-2 text-sm font-medium text-slate-600"
+              className="flex min-h-11 items-center rounded-xl px-3 text-base font-medium text-slate-600 active:bg-slate-50"
             >
               {content.navbar.howItWorks}
             </a>
             <a
               href="#pricing"
               onClick={(event) => scrollToSection(event, "pricing")}
-              className="block px-1 py-2 text-sm font-medium text-slate-600"
+              className="flex min-h-11 items-center rounded-xl px-3 text-base font-medium text-slate-600 active:bg-slate-50"
             >
               {content.navbar.pricing}
             </a>
             <button
               type="button"
               onClick={handleBlogClick}
-              className="block w-full text-left px-1 py-2 text-sm font-medium text-slate-600"
+              className="flex min-h-11 w-full items-center rounded-xl px-3 text-left text-base font-medium text-slate-600 active:bg-slate-50"
             >
               {content.navbar.blog}
             </button>
-            <div className="flex flex-col gap-2 pt-2">
-              <button className="w-full rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600">
+            <div className="flex flex-col gap-2 px-1 pt-3">
+              <button className="min-h-11 w-full rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-600">
                 {content.navbar.signIn}
               </button>
-              <button className="w-full rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white">
+              <button className="min-h-11 w-full rounded-full bg-brand px-4 text-sm font-semibold text-white">
                 {content.navbar.getStarted}
               </button>
             </div>
