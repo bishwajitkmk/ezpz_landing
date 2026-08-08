@@ -57,10 +57,7 @@ const App = () => {
         <Route
           path="/"
           element={
-            <Home
-              onNavigateCreateAccount={handleNavigateCreateAccount}
-              onNavigateSection={handleNavigateHome}
-            />
+            <Home onNavigateCreateAccount={handleNavigateCreateAccount} />
           }
         />
         <Route
@@ -88,10 +85,7 @@ const App = () => {
         <Route
           path="*"
           element={
-            <Home
-              onNavigateCreateAccount={handleNavigateCreateAccount}
-              onNavigateSection={handleNavigateHome}
-            />
+            <Home onNavigateCreateAccount={handleNavigateCreateAccount} />
           }
         />
       </Routes>

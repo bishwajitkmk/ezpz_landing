@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { useLanguage } from "../i18n/LanguageContext";
 import JarvisDemo from "./JarvisDemo";
 import FloatingElements from "./FloatingElements";
 import Particle from "./Particle";
+import DemoVideoModal from "./DemoVideoModal";
 
 const SCRAMBLE_WORDS = ["Physics", "Chemistry", "Math"];
 
@@ -126,9 +127,10 @@ const ScrambleWord = () => {
   );
 };
 
-const Hero = ({ onStartLearning, onWatchDemo }) => {
+const Hero = ({ onStartLearning }) => {
   const heroRef = useRef(null);
   const { content } = useLanguage();
+  const [isDemoVideoOpen, setIsDemoVideoOpen] = useState(false);
 
   return (
     <>
@@ -273,7 +275,7 @@ const Hero = ({ onStartLearning, onWatchDemo }) => {
 
               <button
                 type="button"
-                onClick={onWatchDemo}
+                onClick={() => setIsDemoVideoOpen(true)}
                 className="
                   w-full
                   max-w-xs
@@ -340,6 +342,20 @@ const Hero = ({ onStartLearning, onWatchDemo }) => {
       >
         <JarvisDemo />
       </section>
+
+      {/* =========================================================
+          DEMO VIDEO MODAL
+
+          Rendered outside the hero section on purpose: the section
+          clips overflow and the content sits inside an animated
+          (transformed) wrapper, either of which would break a
+          fixed-position overlay.
+      ========================================================== */}
+
+      <DemoVideoModal
+        isOpen={isDemoVideoOpen}
+        onClose={() => setIsDemoVideoOpen(false)}
+      />
     </>
   );
 };

@@ -5,12 +5,9 @@ import TractionAndValidation from "../components/TractionAndValidation";
 import Footer from "../components/Footer";
 import CreateAccCTA from "../components/CreateAccCTA";
 
-const Home = ({ onNavigateCreateAccount, onNavigateSection }) => (
+const Home = ({ onNavigateCreateAccount }) => (
   <main id="home" className="min-h-dvh bg-white">
-    <Hero
-      onStartLearning={onNavigateCreateAccount}
-      onWatchDemo={() => onNavigateSection("demo")}
-    />
+    <Hero onStartLearning={onNavigateCreateAccount} />
     <Features />
     <Pricing />
     <TractionAndValidation />
