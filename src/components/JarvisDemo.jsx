@@ -113,7 +113,10 @@ const JarvisDemo = () => {
   return (
     /* Rendered inside Hero's padded container, so it adds no horizontal padding
        of its own. `text-left` undoes the centring Hero applies to the chat. */
-    <section id="demo" className="py-12 sm:py-20 md:py-24 overflow-hidden text-left">
+    <section
+      id="demo"
+      className="py-12 sm:py-20 md:py-24 overflow-hidden text-left"
+    >
       <div className="max-w-7xl mx-auto">
         {/* =====================================================
             SECTION HEADER
@@ -122,7 +125,7 @@ const JarvisDemo = () => {
         <div className="text-center mb-10 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 text-brand text-sm font-semibold mb-5">
             <Sparkles className="w-4 h-4" />
-            <span>Meet JARVIS</span>
+            <span>Meet EZPZ</span>
           </div>
 
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
