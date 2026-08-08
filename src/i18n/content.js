@@ -20,7 +20,7 @@ export const translations = {
       description:
         "Get step-by-step board solutions, interactive AI explanations, and voice-guided learning for HSC Physics in English & Bengali.",
       ctaPrimary: "Start Studying for Free",
-      ctaSecondary: "Watch JARVIS in Action",
+      ctaSecondary: "Watch EZPZ in Action",
       previewTitle: "JARVIS",
       previewSubtitle: "Your personal Physics tutor",
       previewBadge: "AI Physics Tutor",
@@ -431,7 +431,7 @@ export const translations = {
       description:
         "HSC ফিজিক্স ধাপে ধাপে বোর্ড সমাধান, ইন্টার‍্যাকটিভ AI ব্যাখ্যা এবং ইংরেজি ও বাংলা উভয় ভাষায় ভয়েস-গাইডেড শেখার সুযোগ পান।",
       ctaPrimary: "ফ্রিতে শেখা শুরু করুন",
-      ctaSecondary: "JARVIS-এর কাজ দেখুন",
+      ctaSecondary: "EZPZ-এর কাজ দেখুন",
       previewTitle: "JARVIS",
       previewSubtitle: "আপনার ব্যক্তিগত ফিজিক্স টিউটর",
       previewBadge: "AI ফিজিক্স টিউটর",
