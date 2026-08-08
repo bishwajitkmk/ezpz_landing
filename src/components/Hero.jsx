@@ -126,7 +126,7 @@ const ScrambleWord = () => {
   );
 };
 
-const Hero = () => {
+const Hero = ({ onStartLearning, onWatchDemo }) => {
   const heroRef = useRef(null);
   const { content } = useLanguage();
 
@@ -138,7 +138,7 @@ const Hero = () => {
 
       <section
         ref={heroRef}
-        className="relative overflow-hidden pt-24 sm:pt-32 pb-20 sm:pb-28 px-4"
+        className="relative overflow-hidden pt-24 sm:pt-32 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8"
       >
         {/* =====================================================
             BACKGROUND EFFECTS
@@ -234,6 +234,7 @@ const Hero = () => {
 
               <button
                 type="button"
+                onClick={onStartLearning}
                 className="
                   w-full
                   max-w-xs
@@ -272,6 +273,7 @@ const Hero = () => {
 
               <button
                 type="button"
+                onClick={onWatchDemo}
                 className="
                   w-full
                   max-w-xs
@@ -318,16 +320,22 @@ const Hero = () => {
           This is intentionally OUTSIDE the Hero section.
       ========================================================== */}
 
+      {/* The negative margin tucks the demo up under the hero. It has to scale
+          with the hero's own padding — a flat -150px eats past the CTA buttons
+          once the hero shrinks to its mobile spacing. */}
       <section
         id="demo"
         className="
           relative
-          py-4
-          sm:py-24
-          px-4
-          mt-[-150px]
+          -mt-16
           bg-white
           overflow-hidden
+          px-4
+          py-4
+          sm:-mt-37.5
+          sm:px-6
+          sm:py-24
+          lg:px-8
         "
       >
         <JarvisDemo />

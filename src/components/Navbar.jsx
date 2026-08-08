@@ -3,7 +3,7 @@ import { Menu, X, Languages } from "lucide-react";
 import logo from "../assets/smart_learning_icon_only.svg";
 import { useLanguage } from "../i18n/LanguageContext";
 
-const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
+const Navbar = ({ onNavigateToBlog, onNavigateHome, onNavigateLogin }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { toggleLanguage, content } = useLanguage();
 
@@ -139,10 +139,18 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
               <Languages className="w-5 h-5" />
             </button>
             <div className="hidden md:flex items-center gap-4">
-              <button className="relative overflow-hidden text-sm font-medium text-slate-600 px-4 py-2 rounded-full transition-all duration-300 hover:text-black before:absolute before:inset-0 before:rounded-full before:bg-brand/10 before:scale-0 before:transition-transform before:duration-200 hover:before:scale-105">
+              <button
+                type="button"
+                onClick={onNavigateLogin}
+                className="relative overflow-hidden text-sm font-medium text-slate-600 px-4 py-2 rounded-full transition-all duration-300 hover:text-black before:absolute before:inset-0 before:rounded-full before:bg-brand/10 before:scale-0 before:transition-transform before:duration-200 hover:before:scale-105"
+              >
                 <span className="relative z-10">{content.navbar.login}</span>
               </button>
-              <button className="bg-brand text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-brand-hover transition-all shadow-sm">
+              <button
+                type="button"
+                onClick={(event) => scrollToSection(event, "get-started")}
+                className="bg-brand text-white text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-brand-hover transition-all shadow-sm"
+              >
                 {content.navbar.getStarted}
               </button>
             </div>
@@ -199,10 +207,18 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome }) => {
               {content.navbar.blog}
             </button>
             <div className="flex flex-col gap-2 px-1 pt-3">
-              <button className="min-h-11 w-full rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-600">
+              <button
+                type="button"
+                onClick={onNavigateLogin}
+                className="min-h-11 w-full rounded-full border border-slate-200 px-4 text-sm font-medium text-slate-600"
+              >
                 {content.navbar.signIn}
               </button>
-              <button className="min-h-11 w-full rounded-full bg-brand px-4 text-sm font-semibold text-white">
+              <button
+                type="button"
+                onClick={(event) => scrollToSection(event, "get-started")}
+                className="min-h-11 w-full rounded-full bg-brand px-4 text-sm font-semibold text-white"
+              >
                 {content.navbar.getStarted}
               </button>
             </div>

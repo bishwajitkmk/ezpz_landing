@@ -327,8 +327,15 @@ export const translations = {
       testimonialRole: "HSC Science Student",
     },
     validation: {
+      eyebrow: "Early student validation",
       heading: "Traction & Validation",
       subheading: "Real students, real results — before launch.",
+      metricLabel: "Student response",
+      signalTitle: "Strong early signal",
+      signalNote: "Based on student feedback",
+      quotesEyebrow: "From the students",
+      quotesSubheading: "What early users are telling us",
+      verifiedLabel: "Verified feedback",
       stats: [
         { value: "9.3", total: "10", label: "Average experience rating" },
         { value: "7", total: "7", label: "Would use EzPz for HSC exam prep" },
@@ -729,8 +736,15 @@ export const translations = {
       testimonialRole: "HSC Science শিক্ষার্থী",
     },
     validation: {
+      eyebrow: "শিক্ষার্থীদের প্রাথমিক যাচাই",
       heading: "ট্র্যাকশন ও ভ্যালিডেশন",
       subheading: "সত্যিকারের শিক্ষার্থী, সত্যিকারের ফলাফল — লঞ্চের আগেই।",
+      metricLabel: "শিক্ষার্থীদের সাড়া",
+      signalTitle: "শক্তিশালী প্রাথমিক ইঙ্গিত",
+      signalNote: "শিক্ষার্থীদের মতামতের ভিত্তিতে",
+      quotesEyebrow: "শিক্ষার্থীদের কথায়",
+      quotesSubheading: "প্রাথমিক ব্যবহারকারীরা যা বলছেন",
+      verifiedLabel: "যাচাইকৃত মতামত",
       stats: [
         { value: "৯.৩", total: "১০", label: "গড় অভিজ্ঞতার রেটিং" },
         {

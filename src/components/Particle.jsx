@@ -465,10 +465,25 @@ const Particle = () => {
     // RESIZE
     // =====================================================
 
-    const handleResize = () => {
+    /* Last size actually rendered. Mobile browsers fire `resize` on every
+       address-bar collapse while scrolling, but this canvas is sized by the
+       hero's content box, so those events usually carry no size change at all —
+       without this guard each one rebuilds every wave's vertex buffer. */
+    let lastWidth = width;
+    let lastHeight = height;
+    let resizeFrame = null;
+
+    const applyResize = () => {
+      resizeFrame = null;
+
       const newWidth = container.clientWidth;
 
       const newHeight = container.clientHeight;
+
+      if (newWidth === lastWidth && newHeight === lastHeight) return;
+
+      lastWidth = newWidth;
+      lastHeight = newHeight;
 
       camera.aspect = newWidth / newHeight;
 
@@ -510,7 +525,16 @@ const Particle = () => {
       resultPosition.needsUpdate = true;
     };
 
+    /* Coalesce bursts of resize events (drag-resizing a desktop window,
+       rotating a phone) into one rebuild per frame. */
+    const handleResize = () => {
+      if (resizeFrame !== null) return;
+
+      resizeFrame = requestAnimationFrame(applyResize);
+    };
+
     window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
 
     // =====================================================
     // CLEANUP
@@ -524,6 +548,10 @@ const Particle = () => {
       container.removeEventListener("pointerleave", handlePointerLeave);
 
       window.removeEventListener("resize", handleResize);
+
+      window.removeEventListener("orientationchange", handleResize);
+
+      if (resizeFrame !== null) cancelAnimationFrame(resizeFrame);
 
       // Dispose wave geometries
       waves.forEach((wave) => {

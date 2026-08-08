@@ -11,6 +11,7 @@ import {
 
 const demoSlides = {
   Physics: {
+    tutor: "JARVIS",
     badge: "AI Physics Tutor",
     chapter: "Thermodynamics",
     question:
@@ -29,6 +30,7 @@ const demoSlides = {
   },
 
   Chemistry: {
+    tutor: "AURUM",
     badge: "AI Chemistry Coach",
     chapter: "Chemical Kinetics",
     question:
@@ -47,6 +49,7 @@ const demoSlides = {
   },
 
   Math: {
+    tutor: "ALGEBRO",
     badge: "AI Math Mentor",
     chapter: "Algebra",
     question:
@@ -127,8 +130,8 @@ const JarvisDemo = () => {
           </h2>
 
           <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
-            See how JARVIS explains concepts differently across Physics,
-            Chemistry, and Math.
+            See how JARVIS, AURUM and ALGEBRO explain concepts differently
+            across Physics, Chemistry and Math.
           </p>
         </div>
 
@@ -208,7 +211,7 @@ const JarvisDemo = () => {
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.25em] text-brand">
-                    JARVIS Demo
+                    {currentDemo.tutor} Demo
                   </p>
 
                   <p className="text-sm text-slate-500 mt-1">
@@ -280,7 +283,9 @@ const JarvisDemo = () => {
                       {/* RESPONSE HEADER */}
 
                       <div className="flex flex-wrap items-center gap-2 mb-4">
-                        <span className="font-bold text-slate-900">JARVIS</span>
+                        <span className="font-bold text-slate-900">
+                          {currentDemo.tutor}
+                        </span>
 
                         <span className="px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded uppercase font-bold tracking-wider">
                           {currentDemo.badge}
