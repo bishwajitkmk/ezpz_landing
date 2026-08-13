@@ -54,7 +54,7 @@ export default function CreateAccount({ onBack, onNavigateLogin }) {
             <div className="mb-8">
               <div className="inline-flex items-center gap-2 rounded-full bg-brand/10 text-brand px-4 py-2 text-sm font-semibold">
                 <Sparkles className="w-4 h-4" />
-                Start learning with E TESTPaper
+                Start learning with EZPZ
               </div>
               <h1 className="mt-6 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
                 Create your free account
@@ -184,7 +184,7 @@ export default function CreateAccount({ onBack, onNavigateLogin }) {
                 it is allowed to wrap. */}
             <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.15em] text-brand-light/80 sm:text-sm sm:tracking-[0.2em]">
               <UserPlus className="h-5 w-5 shrink-0" />
-              <span className="min-w-0">Why choose E TESTPaper</span>
+              <span className="min-w-0">Why choose EZPZ</span>
             </div>
             <div className="space-y-5">
               <div className="rounded-3xl bg-white/10 p-5 shadow-inner">

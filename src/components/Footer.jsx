@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../assets/smart_learning_icon_only.svg";
+import autoliniumLogo from "../assets/logo/autolinium.jpeg";
 import { useLanguage } from "../i18n/LanguageContext";
 
 const Footer = () => {
@@ -18,7 +19,7 @@ const Footer = () => {
                 />
               </div>
               <span className="text-xl font-bold text-slate-900 tracking-tight">
-                E TESTPaper
+                EZPZ
               </span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed mb-6">
@@ -167,6 +168,14 @@ const Footer = () => {
 
         <div className="border-t border-slate-50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] text-slate-400 uppercase tracking-widest font-bold">
           <p className="text-center md:text-left">{content.footer.rights}</p>
+          <div className="flex items-center gap-2">
+            <img
+              src={autoliniumLogo}
+              alt="Autolinium logo"
+              className="w-5 h-5 rounded object-contain"
+            />
+            <span>{content.footer.madeBy}</span>
+          </div>
           <div className="flex flex-wrap justify-center gap-6 sm:gap-8">
             <a
               href="#"

@@ -132,7 +132,7 @@ const Navbar = ({ onNavigateToBlog, onNavigateHome, onNavigateLogin }) => {
           <div className="flex items-center gap-1 sm:gap-2 md:gap-4">
             <button
               type="button"
-              className="flex h-11 w-11 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
+              className="flex invisible h-11 w-11 items-center justify-center rounded-full text-slate-600 hover:bg-slate-100"
               onClick={toggleLanguage}
               aria-label="Switch language"
             >

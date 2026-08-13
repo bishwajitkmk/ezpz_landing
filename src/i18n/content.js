@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     navbar: {
-      brand: "E TESTPaper",
+      brand: "EZPZ",
       features: "Features",
       howItWorks: "How it Works",
       pricing: "Pricing",
@@ -18,7 +18,7 @@ export const translations = {
   "AI Tutor",
 ],
       description:
-        "Get step-by-step board solutions, interactive AI explanations, and voice-guided learning for HSC Physics in English & Bengali.",
+        "Get step-by-step board solutions, interactive AI explanations, and voice-guided learning for HSC Physics, Chemistry & Math in English & Bengali.",
       ctaPrimary: "Start Studying for Free",
       ctaSecondary: "Watch EZPZ in Action",
       videoTitle: "EZPZ demo video",
@@ -64,22 +64,22 @@ export const translations = {
     features: {
       headingPrefix: "Everything you need to ace",
       description:
-        "Stop searching through messy test papers. E TESTPaper brings all your study materials into one intelligent workspace.",
+        "Stop searching through messy notes. EZPZ brings all your study materials into one intelligent workspace.",
       cards: [
         {
           title: "Board Solutions",
           description:
-            "Access 20+ years of HSC Physics Board questions from all boards, solved step-by-step with clear explanations.",
+            "Access 20+ years of HSC Science Board questions from all boards, solved step-by-step with clear explanations.",
         },
         {
           title: "Interactive AI Tutor",
           description:
-            "Ask JARVIS anything. Our AI tutor understands the context of every question and provides personalized help.",
+            "Ask our AI tutors anything. Our AI tutor understands the context of every question and provides personalized help.",
         },
         {
           title: "Voice-First Learning",
           description:
-            "Listen to JARVIS's explanations in high-quality English and Bengali voices. Study without looking at the screen.",
+            "Listen to our AI tutors' explanations in high-quality English and Bengali voices. Study without looking at the screen.",
         },
         {
           title: "MCQ Mastery",
@@ -299,18 +299,18 @@ export const translations = {
       faqs: [
         {
           q: "Can I upgrade, downgrade, or cancel at any time?",
-          a: "Yes, absolutely! E TESTPaper has no long-term contracts. You can easily upgrade, downgrade, or cancel your subscription directly from your account settings with just a few clicks.",
+          a: "Yes, absolutely! EZPZ has no long-term contracts. You can easily upgrade, downgrade, or cancel your subscription directly from your account settings with just a few clicks.",
         },
         {
           q: "How does the grade improvement guarantee work?",
-          a: "We are so confident in our Elite Academy curriculum that if you complete at least 85% of your customized study plans and practice sessions, and don't improve your Physics mock exam or board scores, we will refund 100% of your tuition fees.",
+          a: "We are so confident in our Elite Academy curriculum that if you complete at least 85% of your customized study plans and practice sessions and don't improve your Physics, Chemistry and Math mock exam or board scores, we will refund 100% of your tuition fees.",
         },
         {
           q: "Is there any localized payment method like bKash or Nagad?",
-          a: "Yes! While prices are listed in USD for global standardization, we support bKash, Nagad, Rocket, local cards, and other major mobile banking methods via our secure SSLCommerz checkout page.",
+          a: "Yes! The prices are listed in BDT for local standardization We support bKash, Nagad, Rocket, local cards and other major mobile banking methods via our secure SSLCommerz checkout page.",
         },
         {
-          q: "Can I use E TESTPaper on multiple devices?",
+          q: "Can I use EZPZ on multiple devices?",
           a: "You can sign in and sync your progress on any of your personal devices (phone, tablet, computer). For security reasons, active sessions are limited to prevent simultaneous multi-device sharing.",
         },
       ],
@@ -324,7 +324,7 @@ export const translations = {
       forStudents: "For students",
       perMonth: "/ month",
       testimonialQuote:
-        "I used to spend hours searching through YouTube videos and guidebooks whenever I got stuck. With E TESTPaper, I can ask JARVIS directly and actually understand where I went wrong. It feels like having a study partner available whenever I need one.",
+        "I used to spend hours searching through YouTube videos and guidebooks whenever I got stuck. With EZPZ, I can ask JARVIS or Aurum or Algebro directly and actually understand where I went wrong. It feels like having a study partner available whenever I need one.",
       testimonialName: "Arif Hossain",
       testimonialRole: "HSC Science Student",
     },
@@ -366,7 +366,7 @@ export const translations = {
     },
     footer: {
       description:
-        "Empowering HSC students with AI-driven physics learning and expert solutions.",
+        "Empowering HSC students with AI-driven learning and expert solutions.",
       platform: "Platform",
       resources: "Resources",
       newsletterHeading: "Newsletter",
@@ -376,10 +376,11 @@ export const translations = {
       join: "Join",
       privacy: "Privacy Policy",
       terms: "Terms of Service",
-      rights: "© 2026 E TESTPaper. All rights reserved.",
+      rights: "© 2026 EZPZ. All rights reserved.",
+      madeBy: "Developed by Autolinium",
       links: {
         questionBank: "Question Bank",
-        aiTutor: "AI Tutor JARVIS",
+        aiTutor: "AI Tutors",
         mcqPractice: "MCQ Practice",
         boardSolutions: "Board Solutions",
         syllabus: "HSC Syllabus",
@@ -391,7 +392,7 @@ export const translations = {
     blog: {
       back: "Back to home",
       badge: "Blog",
-      heading: "Learn smarter with the E TESTPaper blog",
+      heading: "Learn smarter with the EZPZ blog",
       description:
         "Practical study tips, product updates, and ideas that make exam preparation simpler and more effective.",
       posts: [
@@ -418,7 +419,7 @@ export const translations = {
   },
   bn: {
     navbar: {
-      brand: "ই টেস্টপেপার",
+      brand: "EZPZ",
       features: "বৈশিষ্ট্যসমূহ",
       howItWorks: "কীভাবে কাজ করে",
       pricing: "মূল্য",
@@ -477,22 +478,22 @@ export const translations = {
     features: {
       headingPrefix: "আপনি যা চান তা একসাথে",
       description:
-        "বিক্ষিপ্ত টেস্ট পেপার খুঁজে বেড়াবেন না। E TESTPaper আপনার সব স্টাডি materyালকে এক স্মার্ট কর্মক্ষেত্রে নিয়ে আসে।",
+        "বিক্ষিপ্ত টেস্ট পেপার খুঁজে বেড়াবেন না। EZPZ আপনার সব স্টাডি materyালকে এক স্মার্ট কর্মক্ষেত্রে নিয়ে আসে।",
       cards: [
         {
           title: "বোর্ড সমাধান",
           description:
-            "সব বোর্ডের HSC ফিজিক্সর ২০+ বছরের প্রশ্ন ধাপে ধাপে সহজ ব্যাখ্যার সাথে অ্যাক্সেস করুন।",
+            "সব বোর্ডের HSC ফিজিক্স, কেমিস্ট্রি আর ম্যাথের ২০+ বছরের প্রশ্ন ধাপে ধাপে সহজ ব্যাখ্যার সাথে অ্যাক্সেস করুন।",
         },
         {
           title: "ইন্টার‍্যাকটিভ AI টিউটর",
           description:
-            "JARVIS-কে জিজ্ঞেস করুন। আমাদের AI টিউটর প্রতিটি প্রশ্নের কনসেপ্ট বুঝে ব্যক্তিগত সহায়তা দেয়।",
+            "AI Tutor-কে জিজ্ঞেস করুন। আমাদের AI টিউটর প্রতিটি প্রশ্নের কনসেপ্ট বুঝে ব্যক্তিগত সহায়তা দেয়।",
         },
         {
           title: "ভয়েস-ফার্স্ট লার্নিং",
           description:
-            "উচ্চমানের ইংরেজি এবং বাংলা ভয়েসে JARVIS-এর ব্যাখ্যা শুনুন। স্ক্রীন না দেখে শেখা চালিয়ে যান।",
+            "উচ্চমানের ইংরেজি এবং বাংলা ভয়েসে AI Tutor-এর ব্যাখ্যা শুনুন। স্ক্রীন না দেখে শেখা চালিয়ে যান।",
         },
         {
           title: "MCQ মাস্টারি",
@@ -502,10 +503,10 @@ export const translations = {
       ],
     },
     demo: {
-      badge: "JARVIS-এর পরিচয়",
-      heading: "পদার্থবিদ্যা, রসায়ন এবং গণিতের জন্য আপনার ব্যক্তিগত AI টিউটরের সাথে স্মার্টলি শিখুন",
+      badge: "AI Tutor-এর পরিচয়",
+      heading: "পদার্থবিদ্যা, রসায়ন এবং গণিতের জন্য আপনার ব্যক্তিগত AI টিউটরের সাথে স্মার্টলি শিখুন",
       description:
-        "আপনি ফর্মুলা, ল্যাব কনসেপ্ট বা সমস্যা-সমাধানের ধাপ শিখুক না কেন, JARVIS প্রতিটি ধারণা স্পষ্টভাবে ব্যাখ্যা করে আপনার গতি অনুযায়ী সাহায্য করে।",
+        "আপনি ফর্মুলা, ল্যাব কনসেপ্ট বা সমস্যা-সমাধানের ধাপ শিখুক না কেন, AI Tutor প্রতিটি ধারণা স্পষ্টভাবে ব্যাখ্যা করে আপনার গতি অনুযায়ী সাহায্য করে।",
       features: [
         {
           title: "ব্যক্তিগতকৃত ব্যাখ্যা",
@@ -792,6 +793,7 @@ export const translations = {
       privacy: "গোপনীয়তা নীতি",
       terms: "সেবা শর্তাবলী",
       rights: "© 2026 E TESTPaper. সর্বস্বত্ব সংরক্ষিত।",
+      madeBy: "তৈরি করেছে Autolinium",
       links: {
         questionBank: "প্রশ্ন ব্যাংক",
         aiTutor: "AI টিউটর JARVIS",

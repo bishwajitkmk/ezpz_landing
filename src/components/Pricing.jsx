@@ -117,10 +117,10 @@ const Pricing = () => {
     },
     {
       q: "Is there any localized payment method like bKash or Nagad?",
-      a: "Yes! While prices are listed in USD for global standardization, we support bKash, Nagad, Rocket, local cards, and other major mobile banking methods via our secure SSLCommerz checkout page.",
+      a: "Yes! The prices are listed in BDT for local standardization We support bKash, Nagad, Rocket, local cards and other major mobile banking methods via our secure SSLCommerz checkout page.",
     },
     {
-      q: "Can I use E TESTPaper on multiple devices?",
+      q: "Can I use EZPZ on multiple devices?",
       a: "You can sign in and sync your progress on any of your personal devices (phone, tablet, computer). For security reasons, active sessions are limited to prevent simultaneous multi-device sharing.",
     },
   ];
